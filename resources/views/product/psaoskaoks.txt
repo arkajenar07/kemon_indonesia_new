@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Tier</title>
+</head>
+<body>
+    <div class="container">
+        <h1>Edit Tier Variations for Item #{{ $item_id }}</h1>
+
+        @if(session('status'))
+            <div class="alert alert-success">{{ session('status') }}</div>
+        @endif
+
+        <form action="{{ route('product.updatetier') }}" method="POST">
+            @csrf
+            <input type="hidden" name="item_id" value="{{ $item_id }}">
+
+            @foreach($variations['tier_variation'] as $tIndex => $tier)
+                <div class="card mb-3 p-3">
+                    <h4>
+                        Tier:
+                        <input type="text" name="variations['tier_variation'][{{ $tIndex }}][name]" value="{{ $tier['name'] }}" class="form-control mb-2" readonly>
+                    </h4>
+
+                    <div id="option-list-{{ $tIndex }}">
+                        @foreach($tier['option_list'] as $oIndex => $opt)
+                            <div class="form-group mb-3">
+                                <label>Option #{{ $oIndex + 1 }}</label>
+                                <input type="text" name="variations['tier_variation'][{{ $tIndex }}][option_list][{{ $oIndex }}][option]" value="{{ $opt['option'] }}" class="form-control mb-1">
+
+                                @if(isset($opt['image']))
+                                    <label>Image URL</label>
+                                    <input type="url" name="variations['tier_variation'][{{ $tIndex }}][option_list][{{ $oIndex }}][image_url]" value="{{ $opt['image']['image_url'] }}" class="form-control mb-1">
+                                    <input type="hidden" name="variations['tier_variation'][{{ $tIndex }}][option_list][{{ $oIndex }}][image_id]" value="{{ $opt['image']['image_id'] }}">
+                                @endif
+
+                                @if($tier['name'] === 'Ukuran')
+                                    @php
+                                        $model = collect($variations['models'])->first(function ($model) use ($oIndex) {
+                                            return isset($model['tier_index'][1]) && $model['tier_index'][1] === $oIndex;
+                                        });
+                                    @endphp
+
+                                    @if($model)
+                                        <div class="mt-2">
+                                            <label>Harga (Price)</label>
+                                            <input type="number" name="models[{{ $oIndex }}][price]" value="{{ $model['price_info'][0]['original_price'] ?? '' }}" class="form-control mb-1">
+
+                                            <label>Stok (Stock)</label>
+                                            <input type="number" name="models[{{ $oIndex }}][stock]" value="{{ $model['stock_info_v2']['seller_stock'][0]['stock'] ?? '' }}" class="form-control mb-1">
+
+                                            <input type="hidden" name="models[{{ $oIndex }}][model_id]" value="{{ $model['model_id'] }}">
+                                        </div>
+                                    @endif
+                                @endif
+                            </div>
+                        @endforeach
+                    </div>
+
+                    @if($tier['name'] === 'Ukuran')
+                        <button type="button" class="btn btn-secondary mt-2" onclick="addOption({{ $tIndex }})">+ Tambah Ukuran</button>
+                    @endif
+                </div>
+            @endforeach
+
+            <button type="submit" class="btn btn-primary">Update Tiers</button>
+        </form>
+    </div>
+
+    <script>
+        function addOption(tierIndex) {
+            const container = document.getElementById(`option-list-${tierIndex}`);
+            const optionCount = container.children.length;
+
+            const newOptionHTML = `
+                <div class="form-group mb-2">
+                    <label>Option #${optionCount + 1} (Baru)</label>
+                    <input type="text" name="variations['tier_variation'][${tierIndex}][option_list][${optionCount}][option]" class="form-control mb-1" placeholder="Ukuran baru">
+
+                    <label>Harga (Price)</label>
+                    <input type="number" name="models[${optionCount}][price]" class="form-control mb-1">
+
+                    <label>Stok (Stock)</label>
+                    <input type="number" name="models[${optionCount}][stock]" class="form-control mb-1">
+                </div>
+            `;
+
+            container.insertAdjacentHTML('beforeend', newOptionHTML);
+        }
+    </script>
+</body>
+</html>
