@@ -41,7 +41,7 @@
                         <div class="flex flex-col gap-y-2 w-[65%] pt-4 items-start">
                             <p class="text-sm border border-black px-3 py-1 rounded-full">SKU: {{ $item['base_info']['item_sku'] }}</p>
                             <h2 class="text-[30px] font-semibold">{{ $item['base_info']['item_name'] ?? '-' }}</h2>
-                            <p><strong>Kondisi:</strong> {{ $item['base_info']['condition'] ?? '-' }}</p>
+                            {{-- <p><strong>Kondisi:</strong> {{ $item['base_info']['condition'] ?? '-' }}</p> --}}
                             @if (!empty($item['base_info']['description_info']['extended_description']['field_list']))
                                 <p><strong>Deskripsi:</strong>
                                     {{ $item['base_info']['description_info']['extended_description']['field_list'][0]['text'] ?? '-' }}
@@ -54,88 +54,191 @@
                             </a>
                         </div>
                     </div>
-                    <h3 class="font-semibold">Variasi:</h3>
-                    <div class="grid md:grid-cols-2 gap-4 my-4">
-                        @foreach ($item['grouped_models'] as $warna => $ukuranList)
-                            <div class="border rounded-lg shadow p-2">
-                                <div class="w-full border p-2 flex gap-x-5">
-                                    <div class="flex-grow">
-                                        <h2 class="text-sm mb-2 border p-2 rounded-full text-center">Info</h2>
-                                        <p class="text-base mb-2"> <strong> Warna: </strong>  {{ $warna }}</p>
+                    <div>
+                        <form action="{{ route('product.update_tier') }}" method="POST">
+                            @csrf
+                            <input type="hidden" name="item_id" value="{{ $item_id }}">
+                            {{-- === FORM TIER VARIATION === --}}
+                            <div>
+                                @foreach ($item['model_data']['tier_variation'] as $i => $tier)
+                                <div id="tier-{{ $i }}-options" class="" data-initial-count="{{ count($tier['option_list']) }}">
+                                <div class="card my-6">
+                                    <input type="hidden" name="tier_variation[{{ $i }}][name]" class="form-control"
+                                        value="{{ $tier['name'] }}" required>
+                                    <h5>{{ $tier['name'] }}:</h5>
+                                    <div id="tier-{{ $i }}-options" class="w-full grid grid-cols-3 gap-4 mt-4">
+                                        @foreach ($tier['option_list'] as $j => $option)
+                                            <div class="mb-3 option-item">
+                                                <div class="d-flex gap-2 align-items-start">
+                                                    <div class="flex-fill">
+                                                        <input type="text" name="tier_variation[{{ $i }}][option_list][{{ $j }}][option]"
+                                                            class="form-control" value="{{ $option['option'] }}" required>
+                                                        @if (isset($option['image']))
+                                                            <input type="url" name="tier_variation[{{ $i }}][option_list][{{ $j }}][image_url]"
+                                                                class="form-control mt-1" value="{{ $option['image']['image_url'] }}">
+                                                            <input type="text" name="tier_variation[{{ $i }}][option_list][{{ $j }}][image_id]"
+                                                                class="form-control mt-1" value="{{ $option['image']['image_id'] }}">
+                                                            <img src="{{ $option['image']['image_url'] }}" alt="Option Image" class="w-[300px] mt-2">
+                                                        @endif
+                                                    </div>
+                                                    <button type="button" class="btn btn-danger btn-sm mt-1" onclick="removeOption(this)">Hapus</button>
+                                                </div>
+                                            </div>
+                                        @endforeach
                                     </div>
-                                {{-- Gambar Warna --}}
-                                @php
-                                    $warnaImage = collect($item['model_data']['tier_variation'][0]['option_list'])
-                                        ->firstWhere('option', $warna)['image']['image_url'] ?? null;
-                                @endphp
 
-                                @if ($warnaImage)
-                                    <img src="{{ $warnaImage }}" alt="{{ $warna }}" class="w-32 h-32 object-cover border">
-                                @endif
+                                    {{-- Tambahkan tombol hanya untuk tier Warna --}}
+                                    @if ($tier['name'] === 'Warna' || $i === 0)
+                                        <button type="button" class="px-4 py-2 bg-slate-200 border border-gray-800 mt-3 font-semibold rounded-lg" onclick="addWarna({{ $i }})">
+                                            + Tambah Warna
+                                        </button>
+                                    @endif
+
+                                    {{-- Tambahkan tombol hanya untuk tier Ukuran --}}
+                                    @if ($tier['name'] === 'Ukuran' || $i === 1)
+                                        <button type="button" class="px-4 py-2 bg-slate-200 border border-gray-800 mt-3 font-semibold rounded-lg" onclick="addUkuran({{ $i }})">
+                                            + Tambah Ukuran
+                                        </button>
+                                    @endif
+
                                 </div>
-
-                                <table class="w-full text-sm mt-4">
-                                    <thead>
-                                        <tr class="bg-gray-200">
-                                            <th class="text-left py-1 px-2">Ukuran</th>
-                                            <th class="text-left py-1 px-2">Stok</th>
-                                            <th class="text-left py-1 px-2">Harga</th>
-                                            <th class="text-left py-1 px-2">Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-    @foreach (collect($ukuranList)->sortBy(function ($val) {
-        return preg_replace('/\D/', '', $val) ?: $val;
-    }) as $ukuran)
-        @php
-            $model = collect($item['model_data']['model'])->first(function ($m) use ($warna, $ukuran) {
-                return trim($m['model_name']) === "$warna,$ukuran";
-            });
-        @endphp
-        <tr>
-            <td class="py-1 px-2">{{ $ukuran }}</td>
-            <td class="py-1 px-2">{{ $model['stock_info_v2']['summary_info']['total_available_stock'] ?? 'N/A' }}</td>
-            <td class="py-1 px-2">
-                Rp. {{ number_format($model['price_info'][0]['current_price'], 0, ',', '.') }}
-            </td>
-            <td class="py-3 px-2 flex justify-center">
-                <div class="w-1/2">
-                    <a href="">
-                        <img src="{{ asset('assets/icons/trash.svg') }}" alt="">
-                    </a>
-                </div>
-            </td>
-        </tr>
-    @endforeach
-</tbody>
-
-                                </table>
+                                </div>
+                            @endforeach
+                            <button id="update-options-button" type="submit"
+                                class="hidden px-4 py-2 bg-blue-600 text-white rounded-lg mt-4">
+                                Update Opsi
+                            </button>
                             </div>
-                        @endforeach
+
+                            {{-- === INPUT STOCK & PRICE UNTUK KOMBINASI OPTION === --}}
+                            <div class="card mb-4">
+                                <h4 class="font-semibold mb-4">Stock & Harga</h4>
+                                @php
+                                    $warnaTier = $item['model_data']['tier_variation'][0];
+                                    $ukuranTier = $item['model_data']['tier_variation'][1];
+                                    // Kelompokkan model berdasarkan warnaIndex
+                                    $groupedByWarna = collect($item['model_data']['model'])->groupBy(fn($model) => $model['tier_index'][0]);
+                                @endphp
+                                @foreach ($warnaTier['option_list'] as $warnaIndex => $warnaOption)
+                                    @php
+                                        $warna = $warnaOption['option'];
+                                    @endphp
+                                    <h4>{{ $warna }}</h4>
+                                    <table class="w-full border border-separate border-gray-300 mb-4">
+                                        <thead>
+                                            <tr>
+                                                <th class="border border-gray-300 px-4 py-2">Ukuran</th>
+                                                <th class="border border-gray-300 px-4 py-2">Harga (Rp)</th>
+                                                <th class="border border-gray-300 px-4 py-2">Stok</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach ($ukuranTier['option_list'] as $ukuranIndex => $ukuranOption)
+                                                @php
+                                                    $ukuran = $ukuranOption['option'];
+
+                                                    $matchedModel = collect($item['model_data']['model'])->first(function ($model) use ($warnaIndex, $ukuranIndex) {
+                                                        return $model['tier_index'][0] === $warnaIndex && $model['tier_index'][1] === $ukuranIndex;
+                                                    });
+
+                                                    $modelId = $matchedModel['model_id'] ?? null;
+                                                    $price = $matchedModel['price_info'][0]['current_price'] ?? null;
+                                                    $stock = $matchedModel['stock_info_v2']['seller_stock'][0]['stock'] ?? null;
+                                                @endphp
+                                                <tr>
+                                                    <td class="border border-gray-300 text-center">
+                                                        {{ $ukuran }}
+                                                        <input type="hidden" name="combinations[{{ $warnaIndex }}_{{ $ukuranIndex }}][model_id]" value="{{ $modelId }}">
+                                                        <input type="hidden" name="combinations[{{ $warnaIndex }}_{{ $ukuranIndex }}][warna]" value="{{ $warna }}">
+                                                        <input type="hidden" name="combinations[{{ $warnaIndex }}_{{ $ukuranIndex }}][ukuran]" value="{{ $ukuran }}">
+                                                        <input type="hidden" name="combinations[{{ $warnaIndex }}_{{ $ukuranIndex }}][tier_index][]" value="{{$warnaIndex}}">
+                                                        <input type="hidden" name="combinations[{{ $warnaIndex }}_{{ $ukuranIndex }}][tier_index][]" value="{{$ukuranIndex}}">
+
+                                                    </td>
+                                                    <td class="border border-gray-300">
+                                                        <input type="number" step="0.01" class="w-full border-none outline-none focus:outline-none focus:border-none ring-0 focus:ring-0"
+                                                            name="combinations[{{ $warnaIndex }}_{{ $ukuranIndex }}][price]" value="{{ $price }}" required>
+                                                    </td>
+                                                    <td class="border border-gray-300">
+                                                        <input type="number" class="w-full border-none outline-none focus:outline-none focus:border-none ring-0 focus:ring-0"
+                                                            name="combinations[{{ $warnaIndex }}_{{ $ukuranIndex }}][stock]" value="{{ $stock }}" required>
+                                                    </td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                @endforeach
+                            </div>
+                            <button type="submit" class="w-full bg-green-50 text-green-600 border border-green-600 rounded-xl font-medium flex item-center justify-center p-4">Update Variasi</button>
+                        </form>
                     </div>
                     <hr>
-                    <div class="w-full mt-4 flex gap-x-4">
-                        <div class="w-1/2">
-                            <a href="">
-                                <div class="bg-green-50 text-green-600 border border-green-600 rounded-xl font-medium flex item-center justify-center p-4">
-                                    Tambah Variasi
-                                </div>
-                            </a>
-                        </div>
-                        <div class="w-1/2">
-                            <a href="{{ route('product.edit_tier', $item['base_info']['item_id'])}}">
-                                <div class="bg-yellow-50 text-yellow-600 border border-yellow-600 rounded-xl font-medium flex item-center justify-center p-4">
-                                    Edit Variasi
-                                </div>
-                            </a>
-                        </div>
-                    </div>
-                    <button type="submit" class="mt-8 w-full bg-gray-800 text-white p-[18px] text-[21px] font-semibold rounded-bl-[24px] rounded-tr-[24px]">
+                    <button class="w-full mt-4 bg-gray-800 text-white p-[18px] text-[21px] font-semibold rounded-bl-[24px] rounded-tr-[24px]">
                         <a href="{{ route('dashboard') }}">Kembali</a>
                     </button>
                 </div>
             </div>
         </div>
     </main>
+<script>
+    function showUpdateButtonIfNeeded(container) {
+        const initialCount = parseInt(container.getAttribute('data-initial-count'));
+        const currentCount = container.querySelectorAll('input[name$="[option]"]').length;
+        const updateButton = document.getElementById('update-options-button');
+
+        if (currentCount > initialCount) {
+            updateButton.classList.remove('hidden');
+        }
+    }
+
+    function addWarna(index) {
+        const container = document.getElementById(`tier-${index}-options`);
+        const count = container.querySelectorAll('.option-item').length;
+
+        const html = `
+            <div class="mb-3 option-item">
+                <div class="d-flex gap-2 align-items-start">
+                    <div class="flex-fill">
+                        <input type="text" name="tier_variation[${index}][option_list][${count}][option]"
+                            class="form-control" placeholder="Warna baru..." required>
+                        <input type="url" name="tier_variation[${index}][option_list][${count}][image_url]"
+                            class="form-control mt-1" placeholder="Image URL (opsional)">
+                        <input type="text" name="tier_variation[${index}][option_list][${count}][image_id]"
+                            class="form-control mt-1" placeholder="Image ID (opsional)">
+                    </div>
+                    <button type="button" class="btn btn-danger btn-sm mt-1" onclick="removeOption(this)">Hapus</button>
+                </div>
+            </div>
+        `;
+        container.insertAdjacentHTML('beforeend', html);
+    }
+
+    function addUkuran(index) {
+        const container = document.getElementById(`tier-${index}-options`);
+        const count = container.querySelectorAll('.option-item').length;
+
+        const html = `
+            <div class="mb-3 option-item">
+                <div class="d-flex gap-2 align-items-start">
+                    <div class="flex-fill">
+                        <input type="text" name="tier_variation[${index}][option_list][${count}][option]"
+                            class="form-control" placeholder="Ukuran baru..." required>
+                    </div>
+                    <button type="button" class="btn btn-danger btn-sm mt-1" onclick="removeOption(this)">Hapus</button>
+                </div>
+            </div>
+        `;
+        container.insertAdjacentHTML('beforeend', html);
+    }
+
+    function removeOption(button) {
+        const item = button.closest('.option-item');
+        if (item) item.remove();
+    }
+</script>
+
+
+
+
 </body>
 </html>

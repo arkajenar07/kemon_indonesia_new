@@ -15,7 +15,7 @@ class ProductController extends Controller
         ];
 
         $response = Shoapi::call('product')
-    		        ->access('get_item_list', '737270427351506e55424179504d666a')
+    		        ->access('get_item_list', '6c4b50677a746357456c4a7277566c75')
     		        ->shop(140997)
                     ->request($params)
     		        ->response();
@@ -33,7 +33,7 @@ class ProductController extends Controller
             ];
 
             $responseBase = Shoapi::call('product')
-                        ->access('get_item_base_info', '737270427351506e55424179504d666a')
+                        ->access('get_item_base_info', '6c4b50677a746357456c4a7277566c75')
                         ->shop(140997)
                         ->request($baseInfoParams)
                         ->response();
@@ -46,7 +46,7 @@ class ProductController extends Controller
             ];
 
             $responseModel = Shoapi::call('product')
-                        ->access('get_model_list', '737270427351506e55424179504d666a')
+                        ->access('get_model_list', '6c4b50677a746357456c4a7277566c75')
                         ->shop(140997)
                         ->request($modelListParams)
                         ->response();
@@ -89,7 +89,7 @@ class ProductController extends Controller
         ];
 
         $responseInfo = Shoapi::call('product')
-    		        ->access('get_item_base_info', '737270427351506e55424179504d666a')
+    		        ->access('get_item_base_info', '6c4b50677a746357456c4a7277566c75')
     		        ->shop(140997)
                     ->request($paramBaseInfo)
     		        ->response();
@@ -97,12 +97,14 @@ class ProductController extends Controller
         $responseInfoArray = json_decode(json_encode($responseInfo), true);
         $baseInfo = $responseInfoArray['item_list'][0];
 
+        // dd($responseInfoArray);
+
         $paramModel =  [
             'item_id' => $item_id
         ];
 
         $responseModel = Shoapi::call('product')
-    		        ->access('get_model_list', '737270427351506e55424179504d666a')
+    		        ->access('get_model_list', '6c4b50677a746357456c4a7277566c75')
     		        ->shop(140997)
                     ->request($paramModel)
     		        ->response();
@@ -135,7 +137,7 @@ class ProductController extends Controller
 
         // dd($item);
 
-        return view('product.index', compact('item'));
+        return view('product.index', compact('item_id', 'item'));
 
     }
     public function edit_base($item_id)
@@ -145,7 +147,7 @@ class ProductController extends Controller
         ];
 
         $response = Shoapi::call('product')
-    		        ->access('get_item_base_info', '737270427351506e55424179504d666a')
+    		        ->access('get_item_base_info', '6c4b50677a746357456c4a7277566c75')
     		        ->shop(140997)
                     ->request($params)
     		        ->response();
@@ -184,7 +186,7 @@ class ProductController extends Controller
         ];
 
         $response = Shoapi::call('product')
-                    ->access('update_item', '737270427351506e55424179504d666a')
+                    ->access('update_item', '6c4b50677a746357456c4a7277566c75')
                     ->shop(140997)
                     ->request($params)
                     ->response();
@@ -205,7 +207,7 @@ class ProductController extends Controller
         ];
 
         $response = Shoapi::call('product')
-    		        ->access('get_model_list', '737270427351506e55424179504d666a')
+    		        ->access('get_model_list', '6c4b50677a746357456c4a7277566c75')
     		        ->shop(140997)
                     ->request($params)
     		        ->response();
@@ -218,107 +220,171 @@ class ProductController extends Controller
         return view('product.edit-tier', compact('item_id', 'variations'));
     }
 
-    public function update_tier(Request $request)
+    public function uploadImageToShopee($file)
     {
-        // Validasi form tier_variation dan kombinasi
-        $validated = $request->validate([
-            'item_id' => 'required|numeric',
-            'tier_variation' => 'required|array',
-            'tier_variation.*.name' => 'required|string',
-            'tier_variation.*.option_list' => 'required|array',
-            'tier_variation.*.option_list.*.option' => 'required|string',
-            'tier_variation.*.option_list.*.image_url' => 'nullable|url',
-            'tier_variation.*.option_list.*.image_id' => 'nullable|string',
-            'combinations' => 'nullable|array',
-            'combinations.*.model_id' => 'required|string',
-            'combinations.*.price' => 'required|numeric',
-            'combinations.*.stock' => 'required|numeric',
-        ]);
+        $fullPath = storage_path('app/public/' . $file);
 
-        // dd($validated);
-
-        // Persiapkan parameter untuk update tier variation
+        // Kirim ke Shopee API via Shoapi wrapper
         $params = [
-            'item_id' => (int) $validated['item_id'],
-            'tier_variation' => [],
+            'image' => $fullPath, // <- Path langsung ditaruh di sini
         ];
 
-        foreach ($validated['tier_variation'] as $tier) {
-            $option_list = [];
-            foreach ($tier['option_list'] as $opt) {
-                $entry = ['option' => $opt['option']];
+        $response = Shoapi::call('media_space')
+            ->access('upload_image', '6c4b50677a746357456c4a7277566c75')
+            ->shop(140997)
+            ->request($params)
+            ->response();
+
+        // dd($response);
+
+        return json_decode(json_encode($response), true);
+
+    }
+    public function update_tier(Request $request)
+{
+    $validated = $request->validate([
+        'item_id' => 'required|numeric',
+        'tier_variation' => 'required|array',
+        'tier_variation.*.name' => 'required|string',
+        'tier_variation.*.option_list' => 'required|array',
+        'tier_variation.*.option_list.*.option' => 'required|string',
+        'tier_variation.*.option_list.*.image_url' => 'nullable|url',
+        'tier_variation.*.option_list.*.image_id' => 'nullable|string',
+        'combinations' => 'nullable|array',
+        'combinations.*.model_id' => 'nullable|string',
+        'combinations.*.price' => 'required|numeric',
+        'combinations.*.stock' => 'required|numeric',
+        'combinations.*.tier_index' => 'nullable|array',
+    ]);
+
+    $params = [
+        'item_id' => (int) $validated['item_id'],
+        'tier_variation' => [],
+    ];
+
+    foreach ($validated['tier_variation'] as $tierIndex => $tier) {
+        $option_list = [];
+
+        foreach ($tier['option_list'] as $optIndex => $opt) {
+            $entry = ['option' => $opt['option']];
+
+            $fileKey = "tier_variation.$tierIndex.option_list.$optIndex.image_file";
+
+            if ($request->hasFile($fileKey)) {
+                // Upload ke media space Shopee
+                $image = $request->file('image')->store('uploads', 'public');;
+                $uploadResponse = $this->uploadImageToShopee($image);
+
+                if ($uploadResponse && ($uploadResponse['error'] ?? 1) === 0) {
+                    $entry['image'] = [
+                        'image_id' => $uploadResponse['image_info']['image_id'],
+                        'image_url' => $uploadResponse['image_info']['image_url_list'][3]['image_url'],
+                    ];
+                }
+            } else {
                 if (!empty($opt['image_url']) && !empty($opt['image_id'])) {
                     $entry['image'] = [
                         'image_id' => $opt['image_id'],
                         'image_url' => $opt['image_url'],
                     ];
                 }
-                $option_list[] = $entry;
             }
-            $params['tier_variation'][] = [
-                'name' => $tier['name'],
-                'option_list' => $option_list,
-            ];
+
+            $option_list[] = $entry;
         }
 
-        // Update tier_variation ke Shopee
-        $updateTierResponse = Shoapi::call('product')
-            ->access('update_tier_variation', '737270427351506e55424179504d666a')
-            ->shop(140997)
-            ->request($params)
-            ->response();
+        $params['tier_variation'][] = [
+            'name' => $tier['name'],
+            'option_list' => $option_list,
+        ];
+    }
 
-        // Jika ada kombinasi model, lanjut update price dan stock
-        if (!empty($validated['combinations'])) {
-            $priceList = [];
-            $stockList = [];
+    // 1. Update Tier Variation
+    $updateTierResponse = Shoapi::call('product')
+        ->access('update_tier_variation', '6c4b50677a746357456c4a7277566c75')
+        ->shop(140997)
+        ->request($params)
+        ->response();
 
-            foreach ($validated['combinations'] as $combo) {
+    $priceList = [];
+    $stockList = [];
+    $newModels = [];
+
+    if (!empty($validated['combinations'])) {
+        foreach ($validated['combinations'] as $combo) {
+            if (!empty($combo['model_id'])) {
+                // 2. Update harga dan stok model lama
                 $priceList[] = [
                     'model_id' => (int) $combo['model_id'],
                     'original_price' => (float) $combo['price'],
                 ];
-
                 $stockList[] = [
                     'model_id' => (int) $combo['model_id'],
-                    'seller_stock' => [
-                        [
-                            'stock' => (int) $combo['stock'],
-                        ]
-                    ],
+                    'seller_stock' => [[ 'stock' => (int) $combo['stock'] ]],
+                ];
+            } else {
+                // 3. Tambah model baru
+                if (!isset($combo['tier_index']) || count($combo['tier_index']) !== 2) {
+                    continue;
+                }
+
+                $newModels[] = [
+                    "tier_index" => array_map('intval', $combo['tier_index']),
+                    "original_price" => (float) $combo['price'],
+                    "seller_stock" => [[ "location_id" => "IDZ", "stock" => (int) $combo['stock'] ]],
+                    "model_sku" => "",
                 ];
             }
+        }
 
-            // dd($priceList, $stockList);
-
-            // Update harga
+        // 4. Update harga
+        if (!empty($priceList)) {
             $updatePriceResponse = Shoapi::call('product')
-                ->access('update_price', '737270427351506e55424179504d666a')
+                ->access('update_price', '6c4b50677a746357456c4a7277566c75')
                 ->shop(140997)
                 ->request([
                     'item_id' => (int) $validated['item_id'],
                     'price_list' => $priceList,
                 ])
                 ->response();
+        }
 
-            // Update stok
+        // 5. Update stok
+        if (!empty($stockList)) {
             $updateStockResponse = Shoapi::call('product')
-                ->access('update_stock', '737270427351506e55424179504d666a')
+                ->access('update_stock', '6c4b50677a746357456c4a7277566c75')
                 ->shop(140997)
                 ->request([
                     'item_id' => (int) $validated['item_id'],
                     'stock_list' => $stockList,
                 ])
                 ->response();
-
-            return response()->json([
-                    'tier_update' => $updateTierResponse,
-                    'price_update' => $updatePriceResponse,
-                    'stock_update' => $updateStockResponse,
-                ]);
         }
 
-        return redirect()->route('product.edit_tier', parameters: $validated['item_id']);
+        // 6. Tambah model baru
+        if (!empty($newModels)) {
+            $addModelResponse = Shoapi::call('product')
+                ->access('add_model', '6c4b50677a746357456c4a7277566c75')
+                ->shop(140997)
+                ->request([
+                    'item_id' => (int) $validated['item_id'],
+                    'model_list' => $newModels,
+                ])
+                ->response();
+
+            $addModelResponse = json_decode(json_encode($addModelResponse), true);
+
+            if (($addModelResponse['error'] ?? 1) != 0) {
+                dd($addModelResponse);
+            }
+        }
+    }
+
+    return redirect()->route('product.info', parameters: $validated['item_id']);
+}
+    public function add_tier()
+    {
+
     }
 
 
@@ -329,7 +395,7 @@ class ProductController extends Controller
         ];
 
         $response = Shoapi::call('product')
-    		        ->access('get_model_list', '737270427351506e55424179504d666a')
+    		        ->access('get_model_list', '6c4b50677a746357456c4a7277566c75')
     		        ->shop(140997)
                     ->request($params)
     		        ->response();
@@ -344,7 +410,7 @@ class ProductController extends Controller
         ];
 
         $response = Shoapi::call('product')
-    		        ->access('get_item_base_info', '737270427351506e55424179504d666a')
+    		        ->access('get_item_base_info', '6c4b50677a746357456c4a7277566c75')
     		        ->shop(140997)
                     ->request($params)
     		        ->response();

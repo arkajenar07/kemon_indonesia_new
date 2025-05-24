@@ -69,11 +69,13 @@
                                 <button class="px-4 py-2 bg-slate-200 rounded-md">
                                     <a href="{{ route('product.info', parameters: $item['item_id']) }}">Details</a>
                                 </button>
-                                <a href="">
-                                    <div class="p-4 bg-red-200 ml-auto rounded-full">
+                               <div class="ml-auto">
+                                 <a href="">
+                                    <div class="p-4 bg-red-200 rounded-full">
                                         <img src="{{ asset('assets/icons/trash.svg') }}" alt="">
                                     </div>
-                                </a>
+                                 </a>
+                               </div>
                             </div>
                         </div>
                     </div>

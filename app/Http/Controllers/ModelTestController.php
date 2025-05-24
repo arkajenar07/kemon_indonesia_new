@@ -30,11 +30,38 @@ class ModelTestController extends Controller
         ];
 
         $response = Shoapi::call('product')
-    		        ->access('add_model', '527a5676497247774b53656f7774594b')
+    		        ->access('add_model', '78686941466a4f567774684b4c6f774c')
     		        ->shop(140997)
                     ->request($params)
     		        ->response();
 
         dd($response);
+    }
+
+    public function upload(Request $request)
+    {
+        // Validasi file image
+        $request->validate([
+            'image' => 'required|image|mimes:jpeg,png,jpg|max:2048',
+        ]);
+
+        // Simpan file ke storage/app/public/uploads
+        $path = $request->file('image')->store('uploads', 'public');
+
+        // Ambil path absolut
+        $fullPath = storage_path('app/public/' . $path);
+
+        // Kirim ke Shopee API via Shoapi wrapper
+        $params = [
+            'image' => $fullPath, // <- Path langsung ditaruh di sini
+        ];
+
+        $response = Shoapi::call('media_space')
+                    ->access('upload_image', '78686941466a4f567774684b4c6f774c')
+                    ->shop(140997)
+                    ->request($params)
+                    ->response();
+
+        return dd($response);
     }
 }

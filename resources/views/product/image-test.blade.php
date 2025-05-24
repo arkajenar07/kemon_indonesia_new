@@ -7,10 +7,11 @@
     <title>Document</title>
 </head>
 <body>
-    <form action="{{ route('storemodel')}}" method="POST">
+    <!-- resources/views/upload.blade.php -->
+    <form action="{{ route('upload.image') }}" method="POST" enctype="multipart/form-data">
         @csrf
-        <input type="number" name="price" id="price">
-        <button type="submit">done</button>
+        <input type="file" name="image" required>
+        <button type="submit">Upload to Shopee</button>
     </form>
 </body>
 </html>

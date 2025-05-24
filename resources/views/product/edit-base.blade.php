@@ -7,6 +7,7 @@
     <title>Prouduct | Edit</title>
     <link rel="icon" href="{{ asset('assets/icons/shoe-head.svg') }}" type="image/x-icon" />
     <link rel="stylesheet" href="/assets/css/style.css">
+    <script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/classic/ckeditor.js"></script>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body>
@@ -69,9 +70,12 @@
 
                         <div class="form-group mt-3 flex flex-col">
                             <label class="text-[18px] font-semibold" for="description_text">Description</label>
-                            <textarea type="text" class="form-control @error('description_text') is-invalid @enderror mt-4 rounded-lg border-2" name="description_text" id="description_text" required>
-                                {{ $item['description_info']['extended_description']['field_list'][0]['text'] }}
-                            </textarea>
+                            <!-- Textarea untuk CKEditor -->
+                            <textarea class="form-control @error('description_text') is-invalid @enderror mt-4 rounded-lg border-2"
+                                      name="description_text"
+                                      id="description_text"
+                                      required>{{ $item['description_info']['extended_description']['field_list'][0]['text'] }}</textarea>
+
                             @error('description_text')
                                 <span class="invalid-feedback">{{ $message }}</span>
                             @enderror
@@ -87,6 +91,13 @@
             </div>
         </div>
     </main>
+    <script>
+    ClassicEditor
+        .create(document.querySelector('#description_text'))
+        .catch(error => {
+            console.error(error);
+        });
+</script>
 </body>
 </html>
 

@@ -20,12 +20,12 @@ class OrderController extends Controller
         ];
 
         $response = Shoapi::call('order')
-            ->access('get_order_list', '4f64656f4459676f4e4a7a6e70484e66')
+            ->access('get_order_list', '4f564b7068676554714c594f565a7259')
             ->shop(140997)
             ->request($params)
             ->response();
 
-        dd($response);
+        dd($response['order_list']);
 
         // return view('dashboard.index', compact('items'));
 
