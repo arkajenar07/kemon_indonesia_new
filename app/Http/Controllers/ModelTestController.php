@@ -30,7 +30,7 @@ class ModelTestController extends Controller
         ];
 
         $response = Shoapi::call('product')
-    		        ->access('add_model', '78686941466a4f567774684b4c6f774c')
+    		        ->access('add_model', '58597441507872566d4e516453664850')
     		        ->shop(140997)
                     ->request($params)
     		        ->response();
@@ -57,11 +57,41 @@ class ModelTestController extends Controller
         ];
 
         $response = Shoapi::call('media_space')
-                    ->access('upload_image', '78686941466a4f567774684b4c6f774c')
+                    ->access('upload_image', access_token: '58597441507872566d4e516453664850')
                     ->shop(140997)
                     ->request($params)
                     ->response();
 
         return dd($response);
     }
+
+    public function testUpdateStockDummy(Request $request)
+{
+    // Simulasi input
+    $dummyInput = [
+        'item_id' => 1910008,
+        'stock_list' => [
+            [
+                'model_id' => 10009629510,
+                'seller_stock' => [
+                    [
+                        // 'location_id' => 'IDZ',
+                        'stock' => 45,
+                    ]
+                ]
+            ],
+        ]
+    ];
+
+    $dummyResponse = Shoapi::call('product')
+                ->access('update_stock', '58597441507872566d4e516453664850')
+                ->shop(140997)
+                ->request(
+                    $dummyInput
+                )
+                ->response();
+
+    return response()->json($dummyResponse);
+}
+
 }

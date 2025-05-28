@@ -113,61 +113,7 @@
                             {{-- === INPUT STOCK & PRICE UNTUK KOMBINASI OPTION === --}}
                             <div class="card mb-4">
                                 <h4 class="font-semibold mb-4">Stock & Harga</h4>
-                                @php
-                                    $warnaTier = $item['model_data']['tier_variation'][0];
-                                    $ukuranTier = $item['model_data']['tier_variation'][1];
-                                    // Kelompokkan model berdasarkan warnaIndex
-                                    $groupedByWarna = collect($item['model_data']['model'])->groupBy(fn($model) => $model['tier_index'][0]);
-                                @endphp
-                                @foreach ($warnaTier['option_list'] as $warnaIndex => $warnaOption)
-                                    @php
-                                        $warna = $warnaOption['option'];
-                                    @endphp
-                                    <h4>{{ $warna }}</h4>
-                                    <table class="w-full border border-separate border-gray-300 mb-4">
-                                        <thead>
-                                            <tr>
-                                                <th class="border border-gray-300 px-4 py-2">Ukuran</th>
-                                                <th class="border border-gray-300 px-4 py-2">Harga (Rp)</th>
-                                                <th class="border border-gray-300 px-4 py-2">Stok</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @foreach ($ukuranTier['option_list'] as $ukuranIndex => $ukuranOption)
-                                                @php
-                                                    $ukuran = $ukuranOption['option'];
-
-                                                    $matchedModel = collect($item['model_data']['model'])->first(function ($model) use ($warnaIndex, $ukuranIndex) {
-                                                        return $model['tier_index'][0] === $warnaIndex && $model['tier_index'][1] === $ukuranIndex;
-                                                    });
-
-                                                    $modelId = $matchedModel['model_id'] ?? null;
-                                                    $price = $matchedModel['price_info'][0]['current_price'] ?? null;
-                                                    $stock = $matchedModel['stock_info_v2']['seller_stock'][0]['stock'] ?? null;
-                                                @endphp
-                                                <tr>
-                                                    <td class="border border-gray-300 text-center">
-                                                        {{ $ukuran }}
-                                                        <input type="hidden" name="combinations[{{ $warnaIndex }}_{{ $ukuranIndex }}][model_id]" value="{{ $modelId }}">
-                                                        <input type="hidden" name="combinations[{{ $warnaIndex }}_{{ $ukuranIndex }}][warna]" value="{{ $warna }}">
-                                                        <input type="hidden" name="combinations[{{ $warnaIndex }}_{{ $ukuranIndex }}][ukuran]" value="{{ $ukuran }}">
-                                                        <input type="hidden" name="combinations[{{ $warnaIndex }}_{{ $ukuranIndex }}][tier_index][]" value="{{$warnaIndex}}">
-                                                        <input type="hidden" name="combinations[{{ $warnaIndex }}_{{ $ukuranIndex }}][tier_index][]" value="{{$ukuranIndex}}">
-
-                                                    </td>
-                                                    <td class="border border-gray-300">
-                                                        <input type="number" step="0.01" class="w-full border-none outline-none focus:outline-none focus:border-none ring-0 focus:ring-0"
-                                                            name="combinations[{{ $warnaIndex }}_{{ $ukuranIndex }}][price]" value="{{ $price }}" required>
-                                                    </td>
-                                                    <td class="border border-gray-300">
-                                                        <input type="number" class="w-full border-none outline-none focus:outline-none focus:border-none ring-0 focus:ring-0"
-                                                            name="combinations[{{ $warnaIndex }}_{{ $ukuranIndex }}][stock]" value="{{ $stock }}" required>
-                                                    </td>
-                                                </tr>
-                                            @endforeach
-                                        </tbody>
-                                    </table>
-                                @endforeach
+                                <div id="model-combinations"></div>
                             </div>
                             <button type="submit" class="w-full bg-green-50 text-green-600 border border-green-600 rounded-xl font-medium flex item-center justify-center p-4">Update Variasi</button>
                         </form>
@@ -180,7 +126,7 @@
             </div>
         </div>
     </main>
-<script>
+{{-- <script>
     function showUpdateButtonIfNeeded(container) {
         const initialCount = parseInt(container.getAttribute('data-initial-count'));
         const currentCount = container.querySelectorAll('input[name$="[option]"]').length;
@@ -235,8 +181,220 @@
         const item = button.closest('.option-item');
         if (item) item.remove();
     }
-</script>
 
+    function getOptions(tierIndex) {
+        const tierDiv = document.getElementById(`tier-${tierIndex}-options`);
+        const inputs = tierDiv.querySelectorAll('input[name^="tier_variation"]');
+        const options = [];
+        for (let input of inputs) {
+            if (input.name.includes('[option]')) {
+                const val = input.value.trim();
+                if (val) options.push(val);
+            }
+        }
+        return options;
+    }
+
+    function generateCombinations() {
+        const warnaList = getOptions(0);
+        const ukuranList = getOptions(1);
+        const container = document.getElementById('model-combinations');
+        container.innerHTML = '';
+
+        warnaList.forEach((warna, warnaIndex) => {
+            const warnaTable = document.createElement('div');
+            warnaTable.innerHTML = `
+                <h4>${warna}</h4>
+                <table class="w-full border border-separate border-gray-300 mb-4">
+                    <thead>
+                        <tr>
+                            <th class="border border-gray-300 px-4 py-2">Ukuran</th>
+                            <th class="border border-gray-300 px-4 py-2">Harga (Rp)</th>
+                            <th class="border border-gray-300 px-4 py-2">Stok</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbody-${warnaIndex}"></tbody>
+                </table>
+            `;
+
+            const tbody = warnaTable.querySelector(`#tbody-${warnaIndex}`);
+
+            ukuranList.forEach((ukuran, ukuranIndex) => {
+                const key = `${warnaIndex}_${ukuranIndex}`;
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td class="border border-gray-300 text-center">
+                        ${ukuran}
+                        <input type="hidden" name="combinations[${key}][warna]" value="${warna}">
+                        <input type="hidden" name="combinations[${key}][ukuran]" value="${ukuran}">
+                        <input type="hidden" name="combinations[${key}][tier_index][]" value="${warnaIndex}">
+                        <input type="hidden" name="combinations[${key}][tier_index][]" value="${ukuranIndex}">
+                    </td>
+                    <td class="border border-gray-300">
+                        <input type="number" step="0.01" class="w-full border-none outline-none focus:outline-none focus:border-none ring-0 focus:ring-0"
+                            name="combinations[${key}][price]" required>
+                    </td>
+                    <td class="border border-gray-300">
+                        <input type="number" class="w-full border-none outline-none focus:outline-none focus:border-none ring-0 focus:ring-0"
+                            name="combinations[${key}][stock]" required>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+
+            container.appendChild(warnaTable);
+        });
+    }
+
+    generateCombinations();
+
+    window.addEventListener('DOMContentLoaded', () => {
+        generateCombinations(); // Untuk inisialisasi awal
+    });
+</script> --}}
+<script>
+    const existingModels = @json($item['model_data']['model'] ?? []);
+
+    function showUpdateButtonIfNeeded(container) {
+        const initialCount = parseInt(container.getAttribute('data-initial-count'));
+        const currentCount = container.querySelectorAll('input[name$="[option]"]').length;
+        const updateButton = document.getElementById('update-options-button');
+
+        if (currentCount > initialCount) {
+            updateButton.classList.remove('hidden');
+        }
+    }
+
+    function addWarna(index) {
+        const container = document.getElementById(`tier-${index}-options`);
+        const count = container.querySelectorAll('.option-item').length;
+
+        const html = `
+            <div class="mb-3 option-item">
+                <div class="d-flex gap-2 align-items-start">
+                    <div class="flex-fill">
+                        <input type="text" name="tier_variation[${index}][option_list][${count}][option]"
+                            class="form-control" placeholder="Warna baru..." required>
+                        <input type="url" name="tier_variation[${index}][option_list][${count}][image_url]"
+                            class="form-control mt-1" placeholder="Image URL (opsional)">
+                        <input type="text" name="tier_variation[${index}][option_list][${count}][image_id]"
+                            class="form-control mt-1" placeholder="Image ID (opsional)">
+                    </div>
+                    <button type="button" class="btn btn-danger btn-sm mt-1" onclick="removeOption(this)">Hapus</button>
+                </div>
+            </div>
+        `;
+        container.insertAdjacentHTML('beforeend', html);
+    }
+
+    function addUkuran(index) {
+        const container = document.getElementById(`tier-${index}-options`);
+        const count = container.querySelectorAll('.option-item').length;
+
+        const html = `
+            <div class="mb-3 option-item">
+                <div class="d-flex gap-2 align-items-start">
+                    <div class="flex-fill">
+                        <input type="text" name="tier_variation[${index}][option_list][${count}][option]"
+                            class="form-control" placeholder="Ukuran baru..." required>
+                    </div>
+                    <button type="button" class="btn btn-danger btn-sm mt-1" onclick="removeOption(this)">Hapus</button>
+                </div>
+            </div>
+        `;
+        container.insertAdjacentHTML('beforeend', html);
+    }
+
+    function removeOption(button) {
+        const item = button.closest('.option-item');
+        if (item) item.remove();
+
+        generateCombinations();
+    }
+
+    function getOptions(tierIndex) {
+        const tierDiv = document.getElementById(`tier-${tierIndex}-options`);
+        const inputs = tierDiv.querySelectorAll('input[name^="tier_variation"]');
+        const options = [];
+        for (let input of inputs) {
+            if (input.name.includes('[option]')) {
+                const val = input.value.trim();
+                if (val) options.push(val);
+            }
+        }
+        return options;
+    }
+
+    function findModel(warnaIndex, ukuranIndex) {
+        return existingModels.find(model =>
+            model.tier_index[0] === warnaIndex &&
+            model.tier_index[1] === ukuranIndex
+        );
+    }
+
+    function generateCombinations() {
+        const warnaList = getOptions(0);
+        const ukuranList = getOptions(1);
+        const container = document.getElementById('model-combinations');
+        container.innerHTML = '';
+
+        warnaList.forEach((warna, warnaIndex) => {
+            const warnaTable = document.createElement('div');
+            warnaTable.innerHTML = `
+                <h4>${warna}</h4>
+                <table class="w-full border border-separate border-gray-300 mb-4">
+                    <thead>
+                        <tr>
+                            <th class="border border-gray-300 px-4 py-2">Ukuran</th>
+                            <th class="border border-gray-300 px-4 py-2">Harga (Rp)</th>
+                            <th class="border border-gray-300 px-4 py-2">Stok</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbody-${warnaIndex}"></tbody>
+                </table>
+            `;
+
+            const tbody = warnaTable.querySelector(`#tbody-${warnaIndex}`);
+
+            ukuranList.forEach((ukuran, ukuranIndex) => {
+                const key = `${warnaIndex}_${ukuranIndex}`;
+                const model = findModel(warnaIndex, ukuranIndex);
+                const price = model?.price_info?.[0]?.current_price ?? '';
+                const stock = model?.stock_info_v2?.seller_stock?.[0]?.stock ?? '';
+                const modelId = model?.model_id ?? '';
+
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td class="border border-gray-300 text-center">
+                        ${ukuran}
+                        <input type="text" name="combinations[${key}][model_id]" value="${modelId}">
+                        <input type="hidden" name="combinations[${key}][warna]" value="${warna}">
+                        <input type="hidden" name="combinations[${key}][ukuran]" value="${ukuran}">
+                        <input type="hidden" name="combinations[${key}][tier_index][]" value="${warnaIndex}">
+                        <input type="hidden" name="combinations[${key}][tier_index][]" value="${ukuranIndex}">
+                    </td>
+                    <td class="border border-gray-300">
+                        <input type="number" step="0.01" class="w-full border-none outline-none focus:outline-none focus:border-none ring-0 focus:ring-0"
+                            name="combinations[${key}][price]" value="${price}" required>
+                    </td>
+                    <td class="border border-gray-300">
+                        <input type="number" class="w-full border-none outline-none focus:outline-none focus:border-none ring-0 focus:ring-0"
+                            name="combinations[${key}][stock]" value="${stock}" required>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+
+            container.appendChild(warnaTable);
+        });
+    }
+
+    generateCombinations();
+
+    window.addEventListener('DOMContentLoaded', () => {
+        generateCombinations();
+    });
+</script>
 
 
 

@@ -15,8 +15,8 @@
         <nav>
             <ul class="flex gap-x-10 items-center">
                 <li class="text-lg px-4 py-2 bg-slate-500 font-semibold text-white rounded-xl" ><a href="{{ route('dashboard') }}">Produk</a></li>
-                {{-- <li class="text-lg" ><a href="{{ route('dashboard.pembelian') }}">Data Pembelian</a></li> --}}
-                {{-- <li class="text-lg" ><a href="{{ route('dashboard.penjualan') }}">Data Penjualan</a></li> --}}
+                <li class="text-lg" ><a href="{{ route('dashboard.pembelian') }}">Data Pembelian</a></li>
+                <li class="text-lg" ><a href="{{ route('dashboard.penjualan') }}">Data Penjualan</a></li>
             </ul>
         </nav>
         <div class="flex items-center gap-x-5">
