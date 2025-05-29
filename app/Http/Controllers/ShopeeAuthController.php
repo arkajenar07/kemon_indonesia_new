@@ -19,18 +19,20 @@ class ShopeeAuthController extends Controller
     {
         $code = $request->get('code');
         $shopId = (int) $request->get('shop_id');
-    
+
         $params = [
             'code' => $code,
             'shop_id' => $shopId,
         ];
-    
+
         $response = Shoapi::call('auth')
             ->access('get_access_token')
             ->shop($shopId)
             ->request($params)
             ->response();
-    
+
+        $response = json_decode(json_encode($response), true);
+
         // Simpan ke database
         ShopeeToken::updateOrCreate(
             ['shop_id' => $shopId],
@@ -40,7 +42,7 @@ class ShopeeAuthController extends Controller
                 'expires_at' => now()->addSeconds($response['expire_in']),
             ]
         );
-    
+
         return response()->json([
             'message' => 'Token berhasil disimpan!',
             'data' => $response,
