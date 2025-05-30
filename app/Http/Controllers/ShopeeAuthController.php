@@ -31,24 +31,24 @@ class ShopeeAuthController extends Controller
             ->request($params)
             ->response();
 
-        return(dd($response));
+        // dd($response);
 
-        // $response = json_decode(json_encode($response), true);
+        $response = json_decode(json_encode($response), true);
 
-        // // Simpan ke database
-        // ShopeeToken::updateOrCreate(
-        //     ['shop_id' => $shopId],
-        //     [
-        //         'access_token' => $response['access_token'],
-        //         'refresh_token' => $response['refresh_token'],
-        //         'expires_at' => now()->addSeconds($response['expire_in']),
-        //     ]
-        // );
+        // Simpan ke database
+        ShopeeToken::updateOrCreate(
+            ['shop_id' => $shopId],
+            [
+                'access_token' => $response['access_token'],
+                'refresh_token' => $response['refresh_token'],
+                'expires_at' => now()->addSeconds($response['expire_in']),
+            ]
+        );
 
-        // return response()->json([
-        //     'message' => 'Token berhasil disimpan!',
-        //     'data' => $response,
-        // ]);
+        return response()->json([
+            'message' => 'Token berhasil disimpan!',
+            'data' => $response,
+        ]);
     }
 
 }
