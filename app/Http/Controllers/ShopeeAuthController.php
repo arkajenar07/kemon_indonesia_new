@@ -31,10 +31,10 @@ class ShopeeAuthController extends Controller
             ->request($params)
             ->response();
 
-        // dd($response);
 
         $response = json_decode(json_encode($response), true);
 
+        dd($response);
         // Simpan ke database
         ShopeeToken::updateOrCreate(
             ['shop_id' => $shopId],
