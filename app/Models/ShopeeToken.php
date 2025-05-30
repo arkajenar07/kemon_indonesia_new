@@ -13,10 +13,5 @@ class ShopeeToken extends Model
         'shop_id',
         'access_token',
         'refresh_token',
-        'expires_at',
-    ];
-
-    protected $casts = [
-        'expires_at' => 'datetime',
     ];
 }
