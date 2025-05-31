@@ -45,19 +45,17 @@ class ShopeeAuthController extends Controller
         //     ]
         // );
 
-        // ShopeeToken::create([
-        //     'shop_id' => $shopId,
-        //     'access_token' =>  $response['access_token'],
-        //     'refresh_token' => $response['refresh_token'],
-        // ]);
-
-        $data = [
+        ShopeeToken::create([
             'shop_id' => $shopId,
             'access_token' =>  $response['access_token'],
             'refresh_token' => $response['refresh_token'],
-        ];
+        ]);
 
-        dd($data);
+        // $data = [
+        //     'shop_id' => $shopId,
+        //     'access_token' =>  $response['access_token'],
+        //     'refresh_token' => $response['refresh_token'],
+        // ];
 
         return response()->json([
             'message' => 'Token berhasil disimpan!',
