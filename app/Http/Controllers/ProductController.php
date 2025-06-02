@@ -42,8 +42,8 @@ class ProductController extends Controller
             ];
 
             $responseBase = Shoapi::call('product')
-                        ->access('get_item_base_info', '58597441507872566d4e516453664850')
-                        ->shop(140997)
+                        ->access('get_item_base_info', $accessToken)
+                        ->shop($shopId)
                         ->request($baseInfoParams)
                         ->response();
 
@@ -55,8 +55,8 @@ class ProductController extends Controller
             ];
 
             $responseModel = Shoapi::call('product')
-                        ->access('get_model_list', '58597441507872566d4e516453664850')
-                        ->shop(140997)
+                        ->access('get_model_list', $accessToken)
+                        ->shop($shopId)
                         ->request($modelListParams)
                         ->response();
 
@@ -93,13 +93,21 @@ class ProductController extends Controller
 
     public function show($item_id)
     {
+        $shopId = 140997; // ganti dengan shop_id kamu
+
+        $accessToken = ShopeeTokenManager::getValidAccessToken($shopId);
+
+        if (!$accessToken) {
+            return response()->json(['error' => 'Token tidak ditemukan atau belum di-authorize'], 401);
+        }
+
         $paramBaseInfo =  [
             'item_id_list' => [$item_id]
         ];
 
         $responseInfo = Shoapi::call('product')
-    		        ->access('get_item_base_info', '58597441507872566d4e516453664850')
-    		        ->shop(140997)
+    		        ->access('get_item_base_info', $accessToken)
+    		        ->shop($shopId)
                     ->request($paramBaseInfo)
     		        ->response();
 
@@ -113,8 +121,8 @@ class ProductController extends Controller
         ];
 
         $responseModel = Shoapi::call('product')
-    		        ->access('get_model_list', '58597441507872566d4e516453664850')
-    		        ->shop(140997)
+    		        ->access('get_model_list', $accessToken)
+    		        ->shop($shopId)
                     ->request($paramModel)
     		        ->response();
 
@@ -151,13 +159,21 @@ class ProductController extends Controller
     }
     public function edit_base($item_id)
     {
+        $shopId = 140997; // ganti dengan shop_id kamu
+
+        $accessToken = ShopeeTokenManager::getValidAccessToken($shopId);
+
+        if (!$accessToken) {
+            return response()->json(['error' => 'Token tidak ditemukan atau belum di-authorize'], 401);
+        }
+
         $params =  [
             'item_id_list' => [$item_id]
         ];
 
         $response = Shoapi::call('product')
-    		        ->access('get_item_base_info', '58597441507872566d4e516453664850')
-    		        ->shop(140997)
+    		        ->access('get_item_base_info', $accessToken)
+    		        ->shop($shopId)
                     ->request($params)
     		        ->response();
 
@@ -170,6 +186,14 @@ class ProductController extends Controller
 
     public function update_base(Request $request)
     {
+        $shopId = 140997; // ganti dengan shop_id kamu
+
+        $accessToken = ShopeeTokenManager::getValidAccessToken($shopId);
+
+        if (!$accessToken) {
+            return response()->json(['error' => 'Token tidak ditemukan atau belum di-authorize'], 401);
+        }
+
         $validated = $request->validate([
             'item_id' => 'required|numeric',
             'item_name' => 'required|string|max:255',
@@ -195,8 +219,8 @@ class ProductController extends Controller
         ];
 
         $response = Shoapi::call('product')
-                    ->access('update_item', '58597441507872566d4e516453664850')
-                    ->shop(140997)
+                    ->access('update_item', $accessToken)
+                    ->shop($shopId)
                     ->request($params)
                     ->response();
 
@@ -211,13 +235,21 @@ class ProductController extends Controller
 
     public function edit_tier($item_id)
     {
+        $shopId = 140997; // ganti dengan shop_id kamu
+
+        $accessToken = ShopeeTokenManager::getValidAccessToken($shopId);
+
+        if (!$accessToken) {
+            return response()->json(['error' => 'Token tidak ditemukan atau belum di-authorize'], 401);
+        }
+
         $params =  [
             'item_id' => $item_id
         ];
 
         $response = Shoapi::call('product')
-    		        ->access('get_model_list', '58597441507872566d4e516453664850')
-    		        ->shop(140997)
+    		        ->access('get_model_list', $accessToken)
+    		        ->shop($shopId)
                     ->request($params)
     		        ->response();
 
@@ -231,6 +263,14 @@ class ProductController extends Controller
 
     public function update_tier(Request $request)
     {
+        $shopId = 140997; // ganti dengan shop_id kamu
+
+        $accessToken = ShopeeTokenManager::getValidAccessToken($shopId);
+
+        if (!$accessToken) {
+            return response()->json(['error' => 'Token tidak ditemukan atau belum di-authorize'], 401);
+        }
+
         $validated = $request->validate([
             'item_id' => 'required|numeric',
             'tier_variation' => 'required|array',
@@ -277,8 +317,8 @@ class ProductController extends Controller
 
         // 1. Update Tier Variation
         $updateTierResponse = Shoapi::call('product')
-            ->access('update_tier_variation', '58597441507872566d4e516453664850')
-            ->shop(140997)
+            ->access('update_tier_variation', $accessToken)
+            ->shop($shopId)
             ->request($params)
             ->response();
 
@@ -330,8 +370,8 @@ class ProductController extends Controller
             // 4. Update Harga
             if (!empty($priceList)) {
                 $updatePriceResponse = Shoapi::call('product')
-                ->access('update_price', '58597441507872566d4e516453664850')
-                ->shop(140997)
+                ->access('update_price', $accessToken)
+                ->shop($shopId)
                 ->request([
                     'item_id' => (int) $validated['item_id'],
                     'price_list' => $priceList,
@@ -343,8 +383,8 @@ class ProductController extends Controller
                 // 5. Update Stok
             if (!empty($stockList)) {
                 $updateStockResponse = Shoapi::call('product')
-                ->access('update_stock', '58597441507872566d4e516453664850')
-                ->shop(140997)
+                ->access('update_stock', $accessToken)
+                ->shop($shopId)
                 ->request([
                     'item_id' => (int) $validated['item_id'],
                     'stock_list' => $stockList,
@@ -357,8 +397,8 @@ class ProductController extends Controller
             // 6. Tambahkan Model Baru (Jika Ada)
             if (!empty($newModels)) {
                 $addModelResponse = Shoapi::call('product')
-                    ->access('add_model', '58597441507872566d4e516453664850')
-                    ->shop(140997)
+                    ->access('add_model', $accessToken)
+                    ->shop($shopId)
                     ->request([
                         'item_id' => (int) $validated['item_id'],
                         'model_list' => $newModels,
@@ -384,33 +424,33 @@ class ProductController extends Controller
     }
 
 
-    public function get_model_list()
-    {
-        $params =  [
-            'item_id' => 1910008
-        ];
+    // public function get_model_list()
+    // {
+    //     $params =  [
+    //         'item_id' => 1910008
+    //     ];
 
-        $response = Shoapi::call('product')
-    		        ->access('get_model_list', '58597441507872566d4e516453664850')
-    		        ->shop(140997)
-                    ->request($params)
-    		        ->response();
+    //     $response = Shoapi::call('product')
+    // 		        ->access('get_model_list', $accessToken)
+    // 		        ->shop($shopId)
+    //                 ->request($params)
+    // 		        ->response();
 
-        dd($response);
-    }
+    //     dd($response);
+    // }
 
-    public function get_base_info()
-    {
-        $params =  [
-            'item_id_list' => [1910008]
-        ];
+    // public function get_base_info()
+    // {
+    //     $params =  [
+    //         'item_id_list' => [1910008]
+    //     ];
 
-        $response = Shoapi::call('product')
-    		        ->access('get_item_base_info', '58597441507872566d4e516453664850')
-    		        ->shop(140997)
-                    ->request($params)
-    		        ->response();
+    //     $response = Shoapi::call('product')
+    // 		        ->access('get_item_base_info', $accessToken)
+    // 		        ->shop($shopId)
+    //                 ->request($params)
+    // 		        ->response();
 
-        dd($response);
-    }
+    //     dd($response);
+    // }
 }
