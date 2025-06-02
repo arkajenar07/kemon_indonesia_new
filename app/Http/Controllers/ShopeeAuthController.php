@@ -36,20 +36,20 @@ class ShopeeAuthController extends Controller
 
         // dd($response);
         // // Simpan ke database
-        // ShopeeToken::updateOrCreate(
-        //     ['shop_id' => $shopId],
-        //     [
-        //         'access_token' => $response['access_token'],
-        //         'refresh_token' => $response['refresh_token'],
-        //         'expires_at' => now()->addSeconds($response['expire_in']),
-        //     ]
-        // );
+        ShopeeToken::updateOrCreate(
+            ['shop_id' => $shopId],
+            [
+                'access_token' => $response['access_token'],
+                'refresh_token' => $response['refresh_token'],
+                'expires_at' => now()->addSeconds($response['expire_in']),
+            ]
+        );
 
-        ShopeeToken::create([
-            'shop_id' => $shopId,
-            'access_token' =>  $response['access_token'],
-            'refresh_token' => $response['refresh_token'],
-        ]);
+        // ShopeeToken::create([
+        //     'shop_id' => $shopId,
+        //     'access_token' =>  $response['access_token'],
+        //     'refresh_token' => $response['refresh_token'],
+        // ]);
 
         // $data = [
         //     'shop_id' => $shopId,

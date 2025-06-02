@@ -4,10 +4,19 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Muhanz\Shoapi\Facades\Shoapi;
+use App\Services\ShopeeTokenManager;
 class ProductController extends Controller
 {
     public function index()
     {
+        $shopId = 140997; // ganti dengan shop_id kamu
+
+        $accessToken = ShopeeTokenManager::getValidAccessToken($shopId);
+
+        if (!$accessToken) {
+            return response()->json(['error' => 'Token tidak ditemukan atau belum di-authorize'], 401);
+        }
+
         $params =  [
             'offset'       => 0,
             'page_size'    => 10,
@@ -15,8 +24,8 @@ class ProductController extends Controller
         ];
 
         $response = Shoapi::call('product')
-    		        ->access('get_item_list', '58597441507872566d4e516453664850')
-    		        ->shop(140997)
+    		        ->access('get_item_list', $accessToken)
+    		        ->shop($shopId)
                     ->request($params)
     		        ->response();
 
