@@ -11,7 +11,7 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body>
-    <header class="flex justify-between items-center p-6 shadow-xl fixed w-full bg-white top-0">
+    <header class="flex justify-between items-center p-6 fixed w-full bg-white top-0">
         <img class="w-[76px]" src="{{ asset('/assets/images/logo-kemon.png') }}" alt="">
         <nav>
             <ul class="flex gap-x-10 items-center">

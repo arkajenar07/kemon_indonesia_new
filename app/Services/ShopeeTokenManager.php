@@ -30,11 +30,13 @@ class ShopeeTokenManager
             ])
             ->response();
 
+        $responseToken = json_decode(json_encode($response), true);
+
         // Update database dengan token baru
         $token->update([
-            'access_token' => $response['access_token'],
-            'refresh_token' => $response['refresh_token'],
-            'expires_at' => now()->addSeconds($response['expire_in']),
+            'access_token' => $responseToken['access_token'],
+            'refresh_token' => $responseToken['refresh_token'],
+            'expires_at' => now()->addSeconds($responseToken['expire_in']),
         ]);
 
         return $response['access_token'];

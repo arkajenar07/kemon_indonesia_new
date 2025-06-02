@@ -367,7 +367,7 @@
                 row.innerHTML = `
                     <td class="border border-gray-300 text-center">
                         ${ukuran}
-                        <input type="text" name="combinations[${key}][model_id]" value="${modelId}">
+                        <input type="hidden" name="combinations[${key}][model_id]" value="${modelId}">
                         <input type="hidden" name="combinations[${key}][warna]" value="${warna}">
                         <input type="hidden" name="combinations[${key}][ukuran]" value="${ukuran}">
                         <input type="hidden" name="combinations[${key}][tier_index][]" value="${warnaIndex}">
