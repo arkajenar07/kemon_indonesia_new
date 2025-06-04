@@ -9,7 +9,7 @@ class ProductController extends Controller
 {
     public function index()
     {
-        $shopId = 140997; // ganti dengan shop_id kamu
+        $shopId = 766550807; // ganti dengan shop_id kamu
 
         $accessToken = ShopeeTokenManager::getValidAccessToken($shopId);
 
@@ -93,7 +93,7 @@ class ProductController extends Controller
 
     public function show($item_id)
     {
-        $shopId = 140997; // ganti dengan shop_id kamu
+        $shopId = 766550807; // ganti dengan shop_id kamu
 
         $accessToken = ShopeeTokenManager::getValidAccessToken($shopId);
 
@@ -159,7 +159,7 @@ class ProductController extends Controller
     }
     public function edit_base($item_id)
     {
-        $shopId = 140997; // ganti dengan shop_id kamu
+        $shopId = 766550807; // ganti dengan shop_id kamu
 
         $accessToken = ShopeeTokenManager::getValidAccessToken($shopId);
 
@@ -186,7 +186,7 @@ class ProductController extends Controller
 
     public function update_base(Request $request)
     {
-        $shopId = 140997; // ganti dengan shop_id kamu
+        $shopId = 766550807; // ganti dengan shop_id kamu
 
         $accessToken = ShopeeTokenManager::getValidAccessToken($shopId);
 
@@ -235,7 +235,7 @@ class ProductController extends Controller
 
     public function edit_tier($item_id)
     {
-        $shopId = 140997; // ganti dengan shop_id kamu
+        $shopId = 766550807; // ganti dengan shop_id kamu
 
         $accessToken = ShopeeTokenManager::getValidAccessToken($shopId);
 
@@ -263,7 +263,7 @@ class ProductController extends Controller
 
     public function update_tier(Request $request)
     {
-        $shopId = 140997; // ganti dengan shop_id kamu
+        $shopId = 766550807; // ganti dengan shop_id kamu
 
         $accessToken = ShopeeTokenManager::getValidAccessToken($shopId);
 
