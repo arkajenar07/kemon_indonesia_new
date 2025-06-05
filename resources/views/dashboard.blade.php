@@ -53,6 +53,7 @@
             <div>
                 {{-- <a href="{{ route('product.show', $item['item_id']) }}">View Details</a> --}}
             </div>
+            @if(isset($allData))
             <div class="card-wrapper grid grid-cols-4 gap-5">
                 @foreach($allData as $item)
                     <div class="card max-w-[320px] h-[380px] bg-white rounded-[24px] overflow-hidden shadow-xl">
@@ -81,6 +82,9 @@
                     </div>
                 @endforeach
             </div>
+            @else
+                <p class="text-gray-500">Tidak ada data produk tersedia.</p>
+            @endif
         </section>
         <a href="{{ route('addmodel')}}">
             Test Add

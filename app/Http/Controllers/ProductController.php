@@ -30,65 +30,70 @@ class ProductController extends Controller
     		        ->response();
 
         $responseArray = json_decode(json_encode($response), true);
-        $items = $responseArray['item'];
+        if($responseArray['total_count'] > 0){
+            $items = $responseArray['item'];
 
-        $allData = [];
-
-        foreach ($items as $item) {
-            $item_id  = $item['item_id'];
-
-            $baseInfoParams =  [
-                'item_id_list' => [$item_id]
-            ];
-
-            $responseBase = Shoapi::call('product')
-                        ->access('get_item_base_info', $accessToken)
-                        ->shop($shopId)
-                        ->request($baseInfoParams)
-                        ->response();
-
-            $responseArrayBase = json_decode(json_encode(value: $responseBase), true);
-            $baseInfo = $responseArrayBase['item_list'][0];
-
-            $modelListParams =  [
-                'item_id' => $item_id
-            ];
-
-            $responseModel = Shoapi::call('product')
-                        ->access('get_model_list', $accessToken)
-                        ->shop($shopId)
-                        ->request($modelListParams)
-                        ->response();
-
-            $responseArrayModel = json_decode(json_encode(value: $responseModel), true);
-            $modelList = $responseArrayModel['model'];
-
-            $prices = [];
-            $totalStock = 0;
-
-            foreach ($modelList as $model) {
-                $price = $model['price_info'][0]['current_price'] ?? 0;
-                $stock = $model['stock_info_v2']['summary_info']['total_available_stock'] ?? 0;
-
-                $prices[] = $price;
-                $totalStock += $stock;
+            $allData = [];
+            
+            foreach ($items as $item) {
+                $item_id  = $item['item_id'];
+            
+                $baseInfoParams =  [
+                    'item_id_list' => [$item_id]
+                ];
+            
+                $responseBase = Shoapi::call('product')
+                            ->access('get_item_base_info', $accessToken)
+                            ->shop($shopId)
+                            ->request($baseInfoParams)
+                            ->response();
+            
+                $responseArrayBase = json_decode(json_encode(value: $responseBase), true);
+                $baseInfo = $responseArrayBase['item_list'][0];
+            
+                $modelListParams =  [
+                    'item_id' => $item_id
+                ];
+            
+                $responseModel = Shoapi::call('product')
+                            ->access('get_model_list', $accessToken)
+                            ->shop($shopId)
+                            ->request($modelListParams)
+                            ->response();
+            
+                $responseArrayModel = json_decode(json_encode(value: $responseModel), true);
+                $modelList = $responseArrayModel['model'];
+            
+                $prices = [];
+                $totalStock = 0;
+            
+                foreach ($modelList as $model) {
+                    $price = $model['price_info'][0]['current_price'] ?? 0;
+                    $stock = $model['stock_info_v2']['summary_info']['total_available_stock'] ?? 0;
+                
+                    $prices[] = $price;
+                    $totalStock += $stock;
+                }
+            
+                $minPrice = !empty($prices) ? min($prices) : 0;
+                $maxPrice = !empty($prices) ? max($prices) : 0;
+            
+                $allData[] = [
+                    'item_id'    => $baseInfo['item_id'],
+                    'name'       => $baseInfo['item_name'] ?? '',
+                    'image'      => $baseInfo['image'] ?? '',
+                    'min_price'  => $minPrice,
+                    'max_price'  => $maxPrice,
+                    'total_stock'=> $totalStock,
+                ];
             }
+        
+            // dd($allData);
+            return view('dashboard', compact('allData'));
 
-            $minPrice = !empty($prices) ? min($prices) : 0;
-            $maxPrice = !empty($prices) ? max($prices) : 0;
-
-            $allData[] = [
-                'item_id'    => $baseInfo['item_id'],
-                'name'       => $baseInfo['item_name'] ?? '',
-                'image'      => $baseInfo['image'] ?? '',
-                'min_price'  => $minPrice,
-                'max_price'  => $maxPrice,
-                'total_stock'=> $totalStock,
-            ];
+        }else{
+            return view('dashboard');
         }
-
-        // dd($allData);
-        return view('dashboard', compact('allData'));
     }
 
     public function show($item_id)
