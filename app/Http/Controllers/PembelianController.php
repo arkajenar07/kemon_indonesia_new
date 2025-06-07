@@ -70,7 +70,7 @@ class PembelianController extends Controller
 
         $pembelian->update($request->all());
 
-        return redirect()->route('dashboard.pembelianw')->with('success', 'Data pembelian berhasil diperbarui.');
+        return redirect()->route('dashboard.pembelian')->with('success', 'Data pembelian berhasil diperbarui.');
     }
 
     // Menghapus data

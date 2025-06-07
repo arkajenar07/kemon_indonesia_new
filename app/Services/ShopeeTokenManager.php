@@ -26,7 +26,8 @@ class ShopeeTokenManager
             ->access('refresh_access_token')
             ->shop($shopId)
             ->request([
-                'refresh_token' => $token->refresh_token
+                'refresh_token' => $token->refresh_token,
+                'shop_id' => $shopId
             ])
             ->response();
 

@@ -36,6 +36,9 @@ Route::get('/dashboard/add-model-test', function(){
 Route::get('/dashboard/pembelian', [PembelianController::class, 'index'])->name('dashboard.pembelian');
 Route::get('/dashboard/pembelian/add', [PembelianController::class, 'create'])->name('pembelian.add');
 Route::post('/dashboard/pembelian/store', [PembelianController::class, 'store'])->name('pembelian.store');
+Route::get('/dashboard/pembelian/{pembelian_id}/edit', [PembelianController::class, 'index'])->name('dashboard.pembelian');
+Route::get('/dashboard/pembelian/{pembelian_id}/update', [PembelianController::class, 'create'])->name('pembelian.add');
+Route::post('/dashboard/pembelian/{pembelian_id}/delete', [PembelianController::class, 'store'])->name('pembelian.store');
 
 Route::get('/dashboard/penjualan', function () {
     return view('penjualan');

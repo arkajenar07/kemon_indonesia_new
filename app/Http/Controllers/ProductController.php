@@ -30,54 +30,55 @@ class ProductController extends Controller
     		        ->response();
 
         $responseArray = json_decode(json_encode($response), true);
-        if($responseArray['total_count'] > 0){
+        
+        if ($responseArray['total_count'] > 0) {
             $items = $responseArray['item'];
 
             $allData = [];
-            
+
             foreach ($items as $item) {
                 $item_id  = $item['item_id'];
-            
+
                 $baseInfoParams =  [
                     'item_id_list' => [$item_id]
                 ];
-            
+
                 $responseBase = Shoapi::call('product')
                             ->access('get_item_base_info', $accessToken)
                             ->shop($shopId)
                             ->request($baseInfoParams)
                             ->response();
-            
+
                 $responseArrayBase = json_decode(json_encode(value: $responseBase), true);
                 $baseInfo = $responseArrayBase['item_list'][0];
-            
+
                 $modelListParams =  [
                     'item_id' => $item_id
                 ];
-            
+
                 $responseModel = Shoapi::call('product')
                             ->access('get_model_list', $accessToken)
                             ->shop($shopId)
                             ->request($modelListParams)
                             ->response();
-            
+
                 $responseArrayModel = json_decode(json_encode(value: $responseModel), true);
                 $modelList = $responseArrayModel['model'];
-            
+
                 $prices = [];
                 $totalStock = 0;
-            
+
                 foreach ($modelList as $model) {
                     $price = $model['price_info'][0]['current_price'] ?? 0;
                     $stock = $model['stock_info_v2']['summary_info']['total_available_stock'] ?? 0;
-                
+
                     $prices[] = $price;
                     $totalStock += $stock;
                 }
-            
+
                 $minPrice = !empty($prices) ? min($prices) : 0;
                 $maxPrice = !empty($prices) ? max($prices) : 0;
-            
+
                 $allData[] = [
                     'item_id'    => $baseInfo['item_id'],
                     'name'       => $baseInfo['item_name'] ?? '',
@@ -87,7 +88,7 @@ class ProductController extends Controller
                     'total_stock'=> $totalStock,
                 ];
             }
-        
+
             // dd($allData);
             return view('dashboard', compact('allData'));
 

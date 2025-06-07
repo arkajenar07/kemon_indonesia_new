@@ -86,9 +86,9 @@
                 <p class="text-gray-500">Tidak ada data produk tersedia.</p>
             @endif
         </section>
-        <a href="{{ route('addmodel')}}">
+        {{-- <a href="{{ route('addmodel')}}">
             Test Add
-        </a>
+        </a> --}}
     </main>
 </body>
 </html>

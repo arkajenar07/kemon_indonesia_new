@@ -90,6 +90,11 @@
                                         Detail
                                     </div>
                                 </a>
+                                <a href="{{ route('pembelian.edit', $pembelian->id) }}">
+                                    <div class="bg-yellow-200 text-sm text-yellow-800 font-semibold px-4 py-2 rounded-lg text-center">
+                                        Edit
+                                    </div>
+                                </a>
                             </div>
                         </div>
                     </div>
