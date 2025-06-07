@@ -40,6 +40,6 @@ class ShopeeTokenManager
             'expires_at' => now()->addSeconds($responseToken['expire_in']),
         ]);
 
-        return $response['access_token'];
+        return $responseToken['access_token'];
     }
 }
