@@ -30,7 +30,7 @@ class ProductController extends Controller
     		        ->response();
 
         $responseArray = json_decode(json_encode($response), true);
-        
+
         if ($responseArray['total_count'] > 0) {
             $items = $responseArray['item'];
 
@@ -413,9 +413,9 @@ class ProductController extends Controller
 
                 $addModelResponse = json_decode(json_encode($addModelResponse), true);
 
-                if (($addModelResponse['error'] ?? 1) != 0) {
+                if ($addModelResponse['api_status'] != "error") {
                     dd($addModelResponse);
-                    // return back()->with('error', 'Gagal menambahkan model baru: ' . ($addModelResponse['message'] ?? 'Unknown error'));
+                    return back()->with('error', 'Gagal menambahkan model baru: ' . ($addModelResponse['message'] ?? 'Unknown error'));
                 }
             }
         }
