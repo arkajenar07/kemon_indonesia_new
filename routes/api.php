@@ -19,4 +19,4 @@ use Illuminate\Support\Facades\Route;
 //     return $request->user();
 // });
 
-Route::post('/test-stock-update', [ModelTestController::class, 'testUpdateStockDummy']);
+Route::post('/test-add', action: [ModelTestController::class, 'testAddDummy']);
