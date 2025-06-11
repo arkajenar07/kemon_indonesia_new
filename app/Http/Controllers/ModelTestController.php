@@ -90,13 +90,11 @@ class ModelTestController extends Controller
                 "package_height" => 20,
             ],
             "logistic_info" => [
-                // Isi sesuai kebutuhan, misalnya:
                 [
-                    // Contoh struktur:
-                    "logistic_id" => 12345,
+                    "logistic_id" => 8003,
                     "enabled" => true,
                     "shipping_fee" => 10000,
-                    "size_id" => null,
+                    "size_id" => 0,
                     "is_free" => false,
                     "estimated_shipping_time" => "2-5",
                 ]
