@@ -15,8 +15,8 @@
         <nav>
             <ul class="flex gap-x-10 items-center">
                 <li class="text-lg px-4 py-2 bg-slate-500 font-semibold text-white rounded-xl" ><a href="{{ route('dashboard') }}">Produk</a></li>
-                <li class="text-lg" ><a href="{{ route('dashboard.pembelian') }}">Data Pembelian</a></li>
-                <li class="text-lg" ><a href="{{ route('dashboard.penjualan') }}">Data Penjualan</a></li>
+                {{-- <li class="text-lg" ><a href="{{ route('dashboard.pembelian') }}">Data Pembelian</a></li>
+                <li class="text-lg" ><a href="{{ route('dashboard.penjualan') }}">Data Penjualan</a></li> --}}
             </ul>
         </nav>
         <div class="flex items-center gap-x-5">
@@ -27,7 +27,7 @@
         </div>
     </header>
     <main class="px-10 mt-[160px]">
-        <div class="w-4/5 mt-16 mx-auto">
+        <div class="w-[85%] mt-16 mx-auto">
             <div class="w-full px-6 pb-6 flex gap-x-4">
                 <div class="w-1/3 flex flex-col gap-y-4">
                     <div class="bg-[#FFF] rounded-lg w-full p-6">
@@ -39,11 +39,7 @@
                         <h2 class="text-lg font-semibold">Basic Information</h2>
                         <div class="flex flex-col w-full gap-y-2 mt-2">
                             <label class="text-sm font-medium text-gray-600">Nama Produk</label>
-                            <textarea
-                                class="border-2 border-gray-200 rounded-lg text-left p-2 overflow-hidden h-[120px]"
-                            >
-                                {{ $item['base_info']['item_name'] ?? '-' }}
-                            </textarea>
+                            <textarea class="border-2 border-gray-200 rounded-lg text-left p-2 overflow-hidden h-[120px] whitespace-pre-wrap">{{$item['base_info']['item_name']}}</textarea>
                         </div>
                         <div class="flex flex-col w-full gap-y-2 mt-2">
                             <label class="text-sm font-medium text-gray-600">SKU Produk</label>
@@ -52,9 +48,7 @@
                         @if (!empty($item['base_info']['description_info']['extended_description']['field_list']))
                         <div class="flex flex-col w-full gap-y-2 mt-2">
                             <label class="text-sm font-medium text-gray-600">Deskripsi Produk</label>
-                            <textarea class="border-2 border-gray-200 rounded-lg h-[250px]" type="text" name="" id="" value="{{ $item['base_info']['item_sku'] }}">
-                                {{ $item['base_info']['description_info']['extended_description']['field_list'][0]['text'] ?? '-' }}
-                            </textarea>
+                            <textarea class="border-2 border-gray-200 rounded-lg h-[250px]" type="text" name="" id="" value="{{ $item['base_info']['item_sku'] }}">{{ $item['base_info']['description_info']['extended_description']['field_list'][0]['text'] ?? '-' }}</textarea>
                         </div>
                         @endif
                         <a href="{{ route('product.editbase', parameters: $item['base_info']['item_id']) }}">
