@@ -70,7 +70,11 @@
                         </div>
                         <div class="flex flex-col">
                             <label for="" class="text-[16px] font-semibold">Cara Bayar</label>
-                            <input class="h-[48px] mt-4 rounded-lg border-2 border-slate-400 focus:border-[#B17457] focus:ring-0" type="text" name="cara_bayar" required>
+                            <label for="" class="text-[16px] font-semibold">Cara Bayar</label>
+                            <select name="cara_bayar" id="">
+                                <option value="transfer">Transfer</option>
+                                <option value="tunai">Tunai</option>
+                            </select>
                         </div>
                         <div class="flex flex-col">
                             <label for="" class="text-[16px] font-semibold">Jatuh Tempo</label>

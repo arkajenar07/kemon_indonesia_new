@@ -37,44 +37,48 @@
                 <div class="p-10">
                     <div class="flex flex-col">
                         <label for="" class="text-[16px] font-semibold">Nama Barang</label>
-                        <input class="h-[48px] mt-4 rounded-lg border-2 border-slate-400 pl-4 outline-[#B17457]" type="name" name="nama_barang" required>
+                        <input class="h-[48px] mt-4 rounded-lg border-2 border-slate-400 pl-4 outline-[#B17457]" type="name" name="nama_barang" value="{{ $pembelian['nama_barang'] }}" required>
                     </div>
                     <div class="grid grid-cols-3 gap-5 flex-grow my-8">
                         <div class="flex flex-col">
                             <label for="" class="text-[16px] font-semibold">No Faktur </label>
-                            <input class="h-[48px] mt-4 rounded-lg border-2 border-slate-400 focus:border-[#B17457] focus:ring-0" type="number" name="no_faktur" required>
+                            <input class="h-[48px] mt-4 rounded-lg border-2 border-slate-400 focus:border-[#B17457] focus:ring-0" type="number" name="no_faktur" value="{{ $pembelian['no_faktur'] }}" required>
                         </div>
                         <div class="flex flex-col">
                             <label for="" class="text-[16px] font-semibold">Nama Pemasok</label>
-                            <input class="h-[48px] mt-4 rounded-lg border-2 border-slate-400 focus:border-[#B17457] focus:ring-0" type="text" name="nama_pemasok" required>
+                            <input class="h-[48px] mt-4 rounded-lg border-2 border-slate-400 focus:border-[#B17457] focus:ring-0" type="text" name="nama_pemasok" value="{{ $pembelian['nama_pemasok'] }}" required>
                         </div>
                         <div class="flex flex-col">
                             <label for="" class="text-[16px] font-semibold">Jumlah Barang</label>
-                            <input class="h-[48px] mt-4 rounded-lg border-2 border-slate-400 focus:border-[#B17457] focus:ring-0" type="number" name="jumlah_barang" required>
+                            <input class="h-[48px] mt-4 rounded-lg border-2 border-slate-400 focus:border-[#B17457] focus:ring-0" type="number" name="jumlah_barang" value="{{ $pembelian['jumlah_barang'] }}" required>
                         </div>
                         <div class="flex flex-col">
                             <label for="" class="text-[16px] font-semibold">Tanggal Beli</label>
-                            <input class="h-[48px] mt-4 rounded-lg border-2 border-slate-400 focus:border-[#B17457] focus:ring-0" type="date" name="tanggal_beli" required>
+                            <input class="h-[48px] mt-4 rounded-lg border-2 border-slate-400 focus:border-[#B17457] focus:ring-0" type="date" name="tanggal_beli" value="{{ \Carbon\Carbon::parse($pembelian['tanggal_beli'])->format('Y-m-d\TH:i') }}" required>
                         </div>
                         <div class="flex flex-col">
                             <label for="" class="text-[16px] font-semibold">Gudang</label>
-                            <input class="h-[48px] mt-4 rounded-lg border-2 border-slate-400 focus:border-[#B17457] focus:ring-0" type="text" name="gudang" required>
+                            <input class="h-[48px] mt-4 rounded-lg border-2 border-slate-400 focus:border-[#B17457] focus:ring-0" type="text" name="gudang"  value="{{ $pembelian['gudang'] }}" required>
                         </div>
                         <div class="flex flex-col">
                             <label for="" class="text-[16px] font-semibold">Jumlah bayar</label>
-                            <input class="h-[48px] mt-4 rounded-lg border-2 border-slate-400 focus:border-[#B17457] focus:ring-0" type="number" name="jumlah_bayar" required>
+                            <input class="h-[48px] mt-4 rounded-lg border-2 border-slate-400 focus:border-[#B17457] focus:ring-0" type="number" name="jumlah_bayar" value="{{ $pembelian['jumlah_bayar'] }}" required>
                         </div>
                         <div class="flex flex-col">
                             <label for="" class="text-[16px] font-semibold">Kode Pemasok</label>
-                            <input class="h-[48px] mt-4 rounded-lg border-2 border-slate-400 focus:border-[#B17457] focus:ring-0" type="text" name="kode_pemasok" required>
+                            <input class="h-[48px] mt-4 rounded-lg border-2 border-slate-400 focus:border-[#B17457] focus:ring-0" type="text" name="kode_pemasok" value="{{ $pembelian['kode_pemasok'] }}" required>
                         </div>
                         <div class="flex flex-col">
                             <label for="" class="text-[16px] font-semibold">Cara Bayar</label>
-                            <input class="h-[48px] mt-4 rounded-lg border-2 border-slate-400 focus:border-[#B17457] focus:ring-0" type="text" name="cara_bayar" required>
+                            <select name="cara_bayar" id="" value="{{ $pembelian['cara_bayar'] }}">
+                                <option value="transfer">Transfer</option>
+                                <option value="tunai">Tunai</option>
+                            </select>
+                            {{-- <input class="h-[48px] mt-4 rounded-lg border-2 border-slate-400 focus:border-[#B17457] focus:ring-0" type="text" name="cara_bayar" value="{{ $pembelian['cara_bayar'] }}" required> --}}
                         </div>
                         <div class="flex flex-col">
                             <label for="" class="text-[16px] font-semibold">Jatuh Tempo</label>
-                            <input class="h-[48px] mt-4 rounded-lg border-2 border-slate-400 focus:border-[#B17457] focus:ring-0" type="date" name="jatuh_tempo" required>
+                            <input class="h-[48px] mt-4 rounded-lg border-2 border-slate-400 focus:border-[#B17457] focus:ring-0" type="date" name="jatuh_tempo" value="{{ \Carbon\Carbon::parse($pembelian['jatuh_tempo'])->format('Y-m-d\TH:i') }}" required>
                         </div>
                     </div>
                     <button type="submit" class="w-full bg-gray-800 text-white p-[18px] text-[21px] font-semibold rounded-bl-[24px] rounded-tr-[24px]">
