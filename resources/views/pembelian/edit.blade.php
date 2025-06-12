@@ -28,7 +28,7 @@
     </header>
     <main class="px-10 mt-[180px]">
         <div class="w-3/5 bg-[#FFF] mt-16 shadow-xl mx-auto rounded-b-[30px]">
-            <form action="{{ route('pembelian.edit', ['pembelian_id' => $pembelian->id]) }}" method="post">
+            <form action="{{ route('pembelian.update', ['pembelian_id' => $pembelian->id]) }}" method="post">
                 @csrf
                 <div class="flex bg-[#B17457] p-[18px] rounded-t-[30px] items-center gap-x-[12px]">
                     <img src="{{ asset('/assets/icons/user-white.svg') }}" alt="" class="w-[42px] h-[42px]">
@@ -54,7 +54,7 @@
                         </div>
                         <div class="flex flex-col">
                             <label for="" class="text-[16px] font-semibold">Tanggal Beli</label>
-                            <input class="h-[48px] mt-4 rounded-lg border-2 border-slate-400 focus:border-[#B17457] focus:ring-0" type="date" name="tanggal_beli" value="{{ \Carbon\Carbon::parse($pembelian['tanggal_beli'])->format('Y-m-d\TH:i') }}" required>
+                            <input class="h-[48px] mt-4 rounded-lg border-2 border-slate-400 focus:border-[#B17457] focus:ring-0" type="date" name="tanggal_beli" value="{{ \Carbon\Carbon::parse($pembelian->tanggal_beli)->format('Y-m-d') }} required>
                         </div>
                         <div class="flex flex-col">
                             <label for="" class="text-[16px] font-semibold">Gudang</label>
@@ -78,7 +78,7 @@
                         </div>
                         <div class="flex flex-col">
                             <label for="" class="text-[16px] font-semibold">Jatuh Tempo</label>
-                            <input class="h-[48px] mt-4 rounded-lg border-2 border-slate-400 focus:border-[#B17457] focus:ring-0" type="date" name="jatuh_tempo" value="{{ \Carbon\Carbon::parse($pembelian['jatuh_tempo'])->format('Y-m-d\TH:i') }}" required>
+                            <input class="h-[48px] mt-4 rounded-lg border-2 border-slate-400 focus:border-[#B17457] focus:ring-0" type="date" name="jatuh_tempo" value="{{ \Carbon\Carbon::parse($pembelian->jatuh_tempo)->format('Y-m-d') }}" required>
                         </div>
                     </div>
                     <button type="submit" class="w-full bg-gray-800 text-white p-[18px] text-[21px] font-semibold rounded-bl-[24px] rounded-tr-[24px]">
