@@ -48,13 +48,14 @@ class PembelianController extends Controller
     }
 
     // Menampilkan form edit
-    public function edit(Pembelian $pembelian)
+    public function edit($pembelian_id)
     {
+        $pembelian = Pembelian::find($pembelian_id);
         return view('pembelian.edit', compact('pembelian'));
     }
 
     // Menyimpan perubahan data
-    public function update(Request $request, Pembelian $pembelian)
+    public function update(Request $request, $pembelian_id)
     {
         $request->validate([
             'no_faktur' => 'required|integer',
@@ -67,6 +68,8 @@ class PembelianController extends Controller
             'cara_bayar' => 'required|string',
             'jatuh_tempo' => 'required|date',
         ]);
+
+        $pembelian = Pembelian::find($pembelian_id);
 
         $pembelian->update($request->all());
 
