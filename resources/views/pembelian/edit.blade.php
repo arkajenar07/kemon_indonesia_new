@@ -54,7 +54,7 @@
                         </div>
                         <div class="flex flex-col">
                             <label for="" class="text-[16px] font-semibold">Tanggal Beli</label>
-                            <input class="h-[48px] mt-4 rounded-lg border-2 border-slate-400 focus:border-[#B17457] focus:ring-0" type="date" name="tanggal_beli" value="{{ \Carbon\Carbon::parse($pembelian->tanggal_beli)->format('Y-m-d') }} required>
+                            <input class="h-[48px] mt-4 rounded-lg border-2 border-slate-400 focus:border-[#B17457] focus:ring-0" type="date" name="tanggal_beli" value="{{ \Carbon\Carbon::parse($pembelian->tanggal_beli)->format('Y-m-d') }}" required>
                         </div>
                         <div class="flex flex-col">
                             <label for="" class="text-[16px] font-semibold">Gudang</label>
