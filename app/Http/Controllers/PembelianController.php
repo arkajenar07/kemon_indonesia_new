@@ -58,6 +58,7 @@ class PembelianController extends Controller
     public function update(Request $request, $pembelian_id)
     {
         $request->validate([
+            'nama_barang' => 'required|string',
             'no_faktur' => 'required|integer',
             'nama_pemasok' => 'required|string',
             'jumlah_barang' => 'required|integer',
@@ -70,7 +71,6 @@ class PembelianController extends Controller
         ]);
 
         $pembelian = Pembelian::find($pembelian_id);
-
         $pembelian->update($request->all());
 
         return redirect()->route('dashboard.pembelian')->with('success', 'Data pembelian berhasil diperbarui.');

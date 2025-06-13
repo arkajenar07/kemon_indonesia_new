@@ -30,6 +30,7 @@
         <div class="w-3/5 bg-[#FFF] mt-16 shadow-xl mx-auto rounded-b-[30px]">
             <form action="{{ route('pembelian.update', ['pembelian_id' => $pembelian->id]) }}" method="post">
                 @csrf
+                @method('PUT')
                 <div class="flex bg-[#B17457] p-[18px] rounded-t-[30px] items-center gap-x-[12px]">
                     <img src="{{ asset('/assets/icons/user-white.svg') }}" alt="" class="w-[42px] h-[42px]">
                     <h1 class="text-[28px] text-[#FFF] font-semibold">Informasi Produk</h1>
@@ -54,7 +55,7 @@
                         </div>
                         <div class="flex flex-col">
                             <label for="" class="text-[16px] font-semibold">Tanggal Beli</label>
-                            <input class="h-[48px] mt-4 rounded-lg border-2 border-slate-400 focus:border-[#B17457] focus:ring-0" type="date" name="jatuh_tempo" value="{{ \Carbon\Carbon::parse($pembelian->tanggal_beli)->format('Y-m-d') }}" required>
+                            <input class="h-[48px] mt-4 rounded-lg border-2 border-slate-400 focus:border-[#B17457] focus:ring-0" type="date" name="tanggal_beli" value="{{ \Carbon\Carbon::parse($pembelian->tanggal_beli)->format('Y-m-d') }}" required>
                         </div>
                         <div class="flex flex-col">
                             <label for="" class="text-[16px] font-semibold">Gudang</label>
@@ -70,9 +71,9 @@
                         </div>
                         <div class="flex flex-col">
                             <label for="" class="text-[16px] font-semibold">Cara Bayar</label>
-                            <select name="cara_bayar" id="" value="{{ $pembelian['cara_bayar'] }}">
-                                <option value="transfer">Transfer</option>
-                                <option value="tunai">Tunai</option>
+                            <select name="cara_bayar" class="h-[48px] mt-4 rounded-lg border-2 border-slate-400 focus:border-[#B17457] focus:ring-0" required>
+                                <option value="transfer" {{ $pembelian['cara_bayar'] == 'transfer' ? 'selected' : '' }}>Transfer</option>
+                                <option value="tunai" {{ $pembelian['cara_bayar'] == 'tunai' ? 'selected' : '' }}>Tunai</option>
                             </select>
                             {{-- <input class="h-[48px] mt-4 rounded-lg border-2 border-slate-400 focus:border-[#B17457] focus:ring-0" type="text" name="cara_bayar" value="{{ $pembelian['cara_bayar'] }}" required> --}}
                         </div>

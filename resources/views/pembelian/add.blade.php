@@ -71,7 +71,7 @@
                         <div class="flex flex-col">
                             <label for="" class="text-[16px] font-semibold">Cara Bayar</label>
                             <label for="" class="text-[16px] font-semibold">Cara Bayar</label>
-                            <select name="cara_bayar" id="">
+                            <select name="cara_bayar" class="h-[48px] mt-4 rounded-lg border-2 border-slate-400 focus:border-[#B17457] focus:ring-0" required>
                                 <option value="transfer">Transfer</option>
                                 <option value="tunai">Tunai</option>
                             </select>
