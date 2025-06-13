@@ -37,7 +37,7 @@ Route::get('/dashboard/pembelian', [PembelianController::class, 'index'])->name(
 Route::get('/dashboard/pembelian/add', [PembelianController::class, 'create'])->name('pembelian.add');
 Route::post('/dashboard/pembelian/store', [PembelianController::class, 'store'])->name('pembelian.store');
 Route::get('/dashboard/pembelian/{pembelian_id}/edit', [PembelianController::class, 'edit'])->name('pembelian.edit');
-Route::post('/dashboard/pembelian/{pembelian_id}/update', [PembelianController::class, 'update'])->name('pembelian.update');
+Route::put('/dashboard/pembelian/{pembelian_id}/update', [PembelianController::class, 'update'])->name('pembelian.update');
 Route::post('/dashboard/pembelian/{pembelian_id}/delete', [PembelianController::class, 'delete'])->name('pembelian.delete');
 
 Route::get('/dashboard/penjualan', function () {
