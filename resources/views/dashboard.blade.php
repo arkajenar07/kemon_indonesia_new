@@ -10,23 +10,23 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body>
-    <header class="flex justify-between items-center p-6 fixed w-full bg-white top-0">
-        <img class="w-[76px]" src="{{ asset('/assets/images/logo-kemon.png') }}" alt="">
+    <header class="flex justify-between items-center p-6 fixed w-full bg-white top-0 border-b border-gray-200 ">
+        <img class="w-[48px]" src="{{ asset('/assets/images/logo-kemon.png') }}" alt="">
         <nav>
             <ul class="flex gap-x-10 items-center">
                 <li class="text-lg px-4 py-2 bg-slate-500 font-semibold text-white rounded-xl" ><a href="{{ route('dashboard') }}">Produk</a></li>
-                <li class="text-lg" ><a href="{{ route('dashboard.pembelian') }}">Data Pembelian</a></li>
-                <li class="text-lg" ><a href="{{ route('dashboard.penjualan') }}">Data Penjualan</a></li>
+                {{-- <li class="text-lg" ><a href="{{ route('dashboard.pembelian') }}">Data Pembelian</a></li>
+                <li class="text-lg" ><a href="{{ route('dashboard.penjualan') }}">Data Penjualan</a></li> --}}
             </ul>
         </nav>
         <div class="flex items-center gap-x-5">
             <img src="{{ asset('/assets/icons/notif.svg') }}" alt="" class="w-6">
-            <div class="w-[48px] h-[48px] overflow-hidden rounded-full">
+            <div class="w-[32px] h-[32px] overflow-hidden rounded-full">
                 <img class="w-full h-full object-cover" src="{{ asset('/assets/images/login-main.png') }}" alt="">
             </div>
         </div>
     </header>
-    <main class="px-24 mt-[180px]">
+    <main class="px-24 mt-[120px]">
         <section>
             <div class="flex items-start justify-between mt-10">
                 <div>
