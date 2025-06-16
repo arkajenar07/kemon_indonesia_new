@@ -15,12 +15,12 @@
         <nav>
             <ul class="flex gap-x-10 items-center">
                 <li class="text-lg px-4 py-2 bg-slate-500 font-semibold text-white rounded-xl" ><a href="{{ route('dashboard') }}">Produk</a></li>
-                <li class="text-lg" ><a href="{{ route('dashboard.pembelian') }}">Data Pembelian</a></li>
-                <li class="text-lg" ><a href="{{ route('dashboard.penjualan') }}">Data Penjualan</a></li>
+                <li class="text-lg" ><a href="#">Data Pembelian</a></li>
+                <li class="text-lg" ><a href="#">Data Penjualan</a></li>
             </ul>
         </nav>
-        <div class="flex items-center gap-x-5">
-            <img src="{{ asset('/assets/icons/notif.svg') }}" alt="" class="w-6">
+        <div class="flex items-center gap-x-2">
+            <span class="font-medium">@kemon_indonesia</span>
             <div class="w-[32px] h-[32px] overflow-hidden rounded-full">
                 <img class="w-full h-full object-cover" src="{{ asset('/assets/images/login-main.png') }}" alt="">
             </div>
@@ -58,20 +58,20 @@
             @if(isset($allData))
             <div class="card-wrapper grid grid-cols-4 gap-5">
                 @foreach($allData as $item)
-                    <div class="card h-[400px] bg-white rounded-2xl overflow-hidden relative">
-                        <img src="{{ asset('assets/images/arjuna.webp') }}" class="w-full h-full object-cover">
+                <div class="card h-[400px] bg-white rounded-2xl overflow-hidden relative">
+                        <img src="{{ $item['image']['image_url_list'][0] }}" alt="{{ $item['name'] }}" class="w-full h-full object-cover">
                         <div class="w-full p-2 h-2/5 absolute bottom-0">
                             <div class="bg-white rounded-xl h-full flex flex-col justify-between p-4">
                                 <div class="">
-                                    <h2 class="text-lg font-semibold truncate">Sandal Kemon Arjuna Size 31-43 Cowok Selop Shoes Pria Sendal</h2>
+                                    <h2 class="text-lg font-semibold truncate">{{ $item['name'] }}</h2>
                                     <div class="flex mt-2">
-                                        <p class="text-sm text-gray-500 border-r border-gray-500 pr-2">Rp. 100.000 - Rp. 125.000</p>
-                                        <p class="text-sm text-gray-500 border-l border-gray-500 pl-2">Stok: 90000</p>
+                                        <p class="text-sm text-gray-500 border-r border-gray-500 pr-2">Rp. {{ $item['min_price'] }} - Rp. {{ $item['max_price'] }}</p>
+                                        <p class="text-sm text-gray-500 border-l border-gray-500 pl-2">Stok:  {{ $item['total_stock'] }}</p>
                                     </div>
                                 </div>
                                 <div class="card-button-wrapper flex items-center w-full gap-x-2">
                                     <button class="px-4 py-2 bg-slate-200 rounded-md flex-grow">
-                                        <a href="#">Details</a>
+                                        <a href="{{ route('product.info', parameters: $item['item_id']) }}">Details</a>
                                     </button>
                                     <div class="w-10 h-10">
                                         <a href="">
