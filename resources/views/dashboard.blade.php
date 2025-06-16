@@ -15,8 +15,8 @@
         <nav>
             <ul class="flex gap-x-10 items-center">
                 <li class="text-lg px-4 py-2 bg-slate-500 font-semibold text-white rounded-xl" ><a href="{{ route('dashboard') }}">Produk</a></li>
-                {{-- <li class="text-lg" ><a href="{{ route('dashboard.pembelian') }}">Data Pembelian</a></li>
-                <li class="text-lg" ><a href="{{ route('dashboard.penjualan') }}">Data Penjualan</a></li> --}}
+                <li class="text-lg" ><a href="{{ route('dashboard.pembelian') }}">Data Pembelian</a></li>
+                <li class="text-lg" ><a href="{{ route('dashboard.penjualan') }}">Data Penjualan</a></li>
             </ul>
         </nav>
         <div class="flex items-center gap-x-5">
@@ -34,18 +34,20 @@
                     <p>Stok dan Informasi Produk</p>
                 </div>
                 <div class="flex gap-x-5">
-                    <div class="flex items-center bg-[#FFF8F2] border border-[#DCA88F] px-4 py-2 rounded-xl">
+                    <div class="flex items-center bg-[#FFFFFF] border border-[#3A2D28] px-4 py-2 rounded-xl">
                         <button>
                             <img src="{{ asset('/assets/icons/search.svg') }}" alt="">
                         </button>
                         <input type="text" name="" id="" class="bg-transparent border-none outline-none focus:outline-none ring-0 focus:ring-0" placeholder="Cari Produk">
                     </div>
-                    <button class="w-[200px] bg-[#DCA88F] justify-center rounded-xl">
-                        {{-- <a href="{{ route('product.add') }}" class="flex items-center gap-x-4 justify-center font-semibold">
-                            <img src="{{ asset('/assets/icons/add-product.svg') }}" alt="" class="w-8">
-                            Add Product
-                        </a> --}}
-                    </button>
+                    <div class="w-[200px] bg-[#3A2D28] rounded-xl">
+                        <a href="">
+                            <div class="text-white w-full h-full flex items-center justify-center gap-x-2">
+                                <img src="{{ asset('assets/icons/add-product-white.svg') }}" alt="" class="w-6">
+                                <span>Add Product</span>
+                            </div>
+                        </a>
+                    </div>
                 </div>
             </div>
         </section>
@@ -56,27 +58,29 @@
             @if(isset($allData))
             <div class="card-wrapper grid grid-cols-4 gap-5">
                 @foreach($allData as $item)
-                    <div class="card max-w-[320px] h-[380px] bg-white rounded-[24px] overflow-hidden shadow-xl">
-                        <div class="w-full h-2/5">
-                            <img src="{{ $item['image']['image_url_list'][0] }}" alt="{{ $item['name'] }}" class="w-full h-full object-cover">
-                        </div>
-                        <div class="p-6 flex flex-col justify-between h-3/5">
-                            <div class="">
-                                <h2 class="text-xl font-semibold truncate">{{ $item['name'] }}</h2>
-                                <p class="text-gray-500">Rp. {{ $item['min_price'] }} - Rp. {{ $item['max_price'] }}</p>
-                                <h2 class="font-medium text-green-800 text-sm p-2 w-2/5 mt-2 bg-green-100 text-center rounded-md">Stok: {{ $item['total_stock'] }}</h2>
-                            </div>
-                            <div class="card-button-wrapper flex items-center w-full gap-x-2">
-                                <button class="px-4 py-2 bg-slate-200 rounded-md">
-                                    <a href="{{ route('product.info', parameters: $item['item_id']) }}">Details</a>
-                                </button>
-                               <div class="ml-auto">
-                                 <a href="">
-                                    <div class="p-4 bg-red-200 rounded-full">
-                                        <img src="{{ asset('assets/icons/trash.svg') }}" alt="">
+                    <div class="card h-[400px] bg-white rounded-2xl overflow-hidden relative">
+                        <img src="{{ asset('assets/images/arjuna.webp') }}" class="w-full h-full object-cover">
+                        <div class="w-full p-2 h-2/5 absolute bottom-0">
+                            <div class="bg-white rounded-xl h-full flex flex-col justify-between p-4">
+                                <div class="">
+                                    <h2 class="text-lg font-semibold truncate">Sandal Kemon Arjuna Size 31-43 Cowok Selop Shoes Pria Sendal</h2>
+                                    <div class="flex mt-2">
+                                        <p class="text-sm text-gray-500 border-r border-gray-500 pr-2">Rp. 100.000 - Rp. 125.000</p>
+                                        <p class="text-sm text-gray-500 border-l border-gray-500 pl-2">Stok: 90000</p>
                                     </div>
-                                 </a>
-                               </div>
+                                </div>
+                                <div class="card-button-wrapper flex items-center w-full gap-x-2">
+                                    <button class="px-4 py-2 bg-slate-200 rounded-md flex-grow">
+                                        <a href="#">Details</a>
+                                    </button>
+                                    <div class="w-10 h-10">
+                                        <a href="">
+                                            <div class="bg-red-200 ml-auto rounded-md h-full flex items-center justify-center p-2">
+                                                <img src="{{ asset('assets/icons/trash.svg') }}" alt="">
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
