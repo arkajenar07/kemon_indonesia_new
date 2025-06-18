@@ -19,8 +19,8 @@
                 <li class="text-lg" ><a href="{{ route('dashboard.penjualan') }}">Data Penjualan</a></li>
             </ul>
         </nav>
-        <div class="flex items-center gap-x-5">
-            <img src="{{ asset('/assets/icons/notif.svg') }}" alt="" class="w-6">
+        <div class="flex items-center gap-x-2">
+            <span class="font-medium">@kemon_indonesia</span>
             <div class="w-[32px] h-[32px] overflow-hidden rounded-full">
                 <img class="w-full h-full object-cover" src="{{ asset('/assets/images/login-main.png') }}" alt="">
             </div>

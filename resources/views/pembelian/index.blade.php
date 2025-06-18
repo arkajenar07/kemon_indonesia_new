@@ -1,4 +1,4 @@
-2<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -10,18 +10,18 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body>
-    <header class="flex justify-between items-center p-6 shadow-xl fixed w-full bg-white top-0">
-        <img class="w-[76px]" src="{{ asset('/assets/images/logo-kemon.png') }}" alt="">
+    <header class="flex justify-between items-center p-6 fixed w-full bg-white top-0 border-b border-gray-200 ">
+        <img class="w-[48px]" src="{{ asset('/assets/images/logo-kemon.png') }}" alt="">
         <nav>
             <ul class="flex gap-x-10 items-center">
-                <li class="text-lg" ><a href="{{ route('dashboard') }}">Produk</a></li>
-                <li class="text-lg px-4 py-2 bg-slate-500 font-semibold text-white rounded-xl" ><a href="{{ route('dashboard.pembelian') }}">Data Pembelian</a></li>
+                <li class="text-lg px-4 py-2 bg-slate-500 font-semibold text-white rounded-xl" ><a href="{{ route('dashboard') }}">Produk</a></li>
+                <li class="text-lg" ><a href="{{ route('dashboard.pembelian') }}">Data Pembelian</a></li>
                 <li class="text-lg" ><a href="{{ route('dashboard.penjualan') }}">Data Penjualan</a></li>
             </ul>
         </nav>
-        <div class="flex items-center gap-x-5">
-            <img src="{{ asset('/assets/icons/notif.svg') }}" alt="" class="w-6">
-            <div class="w-[48px] h-[48px] overflow-hidden rounded-full">
+        <div class="flex items-center gap-x-2">
+            <span class="font-medium">@kemon_indonesia</span>
+            <div class="w-[32px] h-[32px] overflow-hidden rounded-full">
                 <img class="w-full h-full object-cover" src="{{ asset('/assets/images/login-main.png') }}" alt="">
             </div>
         </div>
@@ -29,23 +29,22 @@
     <main class="px-24 mt-[180px]">
         <section>
             <div class="flex items-start justify-between mt-10">
-                <div>
-                    <h1 class="text-[40px] font-semibold">Riwayat Pembelian</h1>
-                    <p>Lorem ipsum  dolor sit amet </p>
-                </div>
+                <h1 class="text-[40px] font-semibold">Data Pembelian</h1>
                 <div class="flex gap-x-5">
-                    <div class="flex items-center bg-[#FFF8F2] border border-[#DCA88F] px-4 py-2 rounded-xl">
+                    <div class="flex items-center bg-[#FFFFFF] border border-[#3A2D28] px-4 py-2 rounded-xl">
                         <button>
                             <img src="{{ asset('/assets/icons/search.svg') }}" alt="">
                         </button>
                         <input type="text" name="" id="" class="bg-transparent border-none outline-none focus:outline-none ring-0 focus:ring-0" placeholder="Cari Produk">
                     </div>
-                    <button class="w-[200px] bg-[#DCA88F] justify-center rounded-xl">
-                        <a href="{{ route('pembelian.add') }}" class="flex items-center gap-x-4 justify-center font-semibold text-[#F9F9F9]">
-                            <img src="{{ asset('/assets/icons/add-product.svg') }}" alt="" class="w-8">
-                            Add Product
+                    <div class="w-[200px] bg-[#3A2D28] rounded-xl">
+                        <a href="">
+                            <div class="text-white w-full h-full flex items-center justify-center gap-x-2">
+                                <img src="{{ asset('assets/icons/add-product-white.svg') }}" alt="" class="w-6">
+                                <span>Add Product</span>
+                            </div>
                         </a>
-                    </button>
+                    </div>
                 </div>
             </div>
         </section>

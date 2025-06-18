@@ -15,8 +15,8 @@
         <nav>
             <ul class="flex gap-x-10 items-center">
                 <li class="text-lg px-4 py-2 bg-slate-500 font-semibold text-white rounded-xl" ><a href="{{ route('dashboard') }}">Produk</a></li>
-                <li class="text-lg" ><a href="#">Data Pembelian</a></li>
-                <li class="text-lg" ><a href="#">Data Penjualan</a></li>
+                <li class="text-lg" ><a href="{{ route('dashboard.pembelian') }}">Data Pembelian</a></li>
+                <li class="text-lg" ><a href="{{ route('dashboard.penjualan') }}">Data Penjualan</a></li>
             </ul>
         </nav>
         <div class="flex items-center gap-x-2">
@@ -29,10 +29,7 @@
     <main class="px-24 mt-[120px]">
         <section>
             <div class="flex items-start justify-between mt-10">
-                <div>
-                    <h1 class="text-[40px] font-semibold">Produk</h1>
-                    <p>Stok dan Informasi Produk</p>
-                </div>
+                <h1 class="text-[40px] font-semibold">List Produk</h1>
                 <div class="flex gap-x-5">
                     <div class="flex items-center bg-[#FFFFFF] border border-[#3A2D28] px-4 py-2 rounded-xl">
                         <button>
@@ -59,31 +56,31 @@
             <div class="card-wrapper grid grid-cols-4 gap-5">
                 @foreach($allData as $item)
                 <div class="card h-[400px] bg-white rounded-2xl overflow-hidden relative">
-                        <img src="{{ $item['image']['image_url_list'][0] }}" alt="{{ $item['name'] }}" class="w-full h-full object-cover">
-                        <div class="w-full p-2 h-2/5 absolute bottom-0">
-                            <div class="bg-white rounded-xl h-full flex flex-col justify-between p-4">
-                                <div class="">
-                                    <h2 class="text-lg font-semibold truncate">{{ $item['name'] }}</h2>
-                                    <div class="flex mt-2">
-                                        <p class="text-sm text-gray-500 border-r border-gray-500 pr-2">Rp. {{ $item['min_price'] }} - Rp. {{ $item['max_price'] }}</p>
-                                        <p class="text-sm text-gray-500 border-l border-gray-500 pl-2">Stok:  {{ $item['total_stock'] }}</p>
-                                    </div>
+                    <img src="{{ $item['image']['image_url_list'][0] }}" alt="{{ $item['name'] }}" class="w-full h-full object-cover">
+                    <div class="w-full p-2 h-2/5 absolute bottom-0">
+                        <div class="bg-white rounded-xl h-full flex flex-col justify-between p-4">
+                            <div class="">
+                                <h2 class="text-lg font-semibold truncate">{{ $item['name'] }}</h2>
+                                <div class="flex mt-2">
+                                    <p class="text-sm text-gray-500 border-r border-gray-500 pr-2">Rp. {{ $item['min_price'] }} - Rp. {{ $item['max_price'] }}</p>
+                                    <p class="text-sm text-gray-500 border-l border-gray-500 pl-2">Stok:  {{ $item['total_stock'] }}</p>
                                 </div>
-                                <div class="card-button-wrapper flex items-center w-full gap-x-2">
-                                    <button class="px-4 py-2 bg-slate-200 rounded-md flex-grow">
-                                        <a href="{{ route('product.info', parameters: $item['item_id']) }}">Details</a>
-                                    </button>
-                                    <div class="w-10 h-10">
-                                        <a href="">
-                                            <div class="bg-red-200 ml-auto rounded-md h-full flex items-center justify-center p-2">
-                                                <img src="{{ asset('assets/icons/trash.svg') }}" alt="">
-                                            </div>
-                                        </a>
-                                    </div>
+                            </div>
+                            <div class="card-button-wrapper flex items-center w-full gap-x-2">
+                                <button class="px-4 py-2 bg-slate-200 rounded-md flex-grow">
+                                    <a href="{{ route('product.info', parameters: $item['item_id']) }}">Details</a>
+                                </button>
+                                <div class="w-10 h-10">
+                                    <a href="">
+                                        <div class="bg-red-200 ml-auto rounded-md h-full flex items-center justify-center p-2">
+                                            <img src="{{ asset('assets/icons/trash.svg') }}" alt="">
+                                        </div>
+                                    </a>
                                 </div>
                             </div>
                         </div>
                     </div>
+                </div>
                 @endforeach
             </div>
             @else
