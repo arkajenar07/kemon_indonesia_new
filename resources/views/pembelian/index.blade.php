@@ -14,8 +14,8 @@
         <img class="w-[48px]" src="{{ asset('/assets/images/logo-kemon.png') }}" alt="">
         <nav>
             <ul class="flex gap-x-10 items-center">
-                <li class="text-lg px-4 py-2 bg-slate-500 font-semibold text-white rounded-xl" ><a href="{{ route('dashboard') }}">Produk</a></li>
-                <li class="text-lg" ><a href="{{ route('dashboard.pembelian') }}">Data Pembelian</a></li>
+                <li class="text-lg" ><a href="{{ route('dashboard') }}">Produk</a></li>
+                <li class="text-lg px-4 py-2 bg-slate-500 font-semibold text-white rounded-xl" ><a href="{{ route('dashboard.pembelian') }}">Data Pembelian</a></li>
                 <li class="text-lg" ><a href="{{ route('dashboard.penjualan') }}">Data Penjualan</a></li>
             </ul>
         </nav>
@@ -26,7 +26,7 @@
             </div>
         </div>
     </header>
-    <main class="px-24 mt-[180px]">
+    <main class="px-24 mt-[120px]">
         <section>
             <div class="flex items-start justify-between mt-10">
                 <h1 class="text-[40px] font-semibold">Data Pembelian</h1>
