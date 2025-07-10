@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\ShopeeTokenManager;
 use Illuminate\Http\Request;
 use Muhanz\Shoapi\Facades\Shoapi;
 
@@ -67,10 +68,18 @@ class ModelTestController extends Controller
 
     public function testAddDummy(Request $request)
     {
+        $shopId = 766550807; // ganti dengan shop_id kamu
+
+        $accessToken = ShopeeTokenManager::getValidAccessToken($shopId);
+
+        if (!$accessToken) {
+            return response()->json(['error' => 'Token tidak ditemukan atau belum di-authorize'], 401);
+        }
+
         // Simulasi input
         $data = [
             "category_id" => 101396,
-            "item_name" => "Keychain Test",
+            "item_name" => "Keychain Tested Sembilan",
             "description" => "ini adalah gantungan kunci",
             "item_sku" => "",
             "image" => [
@@ -93,10 +102,10 @@ class ModelTestController extends Controller
                 [
                     "logistic_id" => 8003,
                     "enabled" => true,
-                    "shipping_fee" => 10000,
-                    "size_id" => 0,
-                    "is_free" => false,
-                    "estimated_shipping_time" => "2-5",
+                ],
+                [
+                    "logistic_id" => 8002,
+                    "enabled" => true,
                 ]
             ],
             "pre_order" => [
@@ -106,10 +115,8 @@ class ModelTestController extends Controller
             "condition" => "NEW",
             "size_chart" => "",
             "item_status" => "NORMAL",
-            "has_model" => true,
             "brand" => [
                 "brand_id" => 0,
-                "original_brand_name" => "NoBrand",
             ],
             "item_dangerous" => 0,
             "description_type" => "normal",
@@ -131,14 +138,62 @@ class ModelTestController extends Controller
         ];
 
         $dummyResponse = Shoapi::call('product')
-                    ->access('add_item', '4f53436c7a5343464e66416277476a73')
-                    ->shop(140997)
+                    ->access('add_item', $accessToken)
+                    ->shop($shopId)
                     ->request(
                         $data
                     )
                     ->response();
 
-        return response()->json($dummyResponse);
+        $dummyResponseArray = json_decode(json_encode($dummyResponse), true);
+
+        $tier = [
+            "item_id" => $dummyResponseArray['item_id'],
+            "tier_variation" => [
+                [
+                    "name" => "Warna",
+                    "option_list" => [
+                        [
+                            "option" => "Main Blue",
+                            "image" => [
+                                "image_id" => "id-11134207-7rbkb-maph9k5wsdus18"
+                            ]
+                        ]
+                    ]
+                ],
+                [
+                    "name" => "Ukuran",
+                    "option_list" => [
+                        [
+                            "option" => "100",
+                        ]
+                    ]
+                ]
+            ],
+            "model" => [
+                [
+                    "tier_index" => [
+                        0, 0
+                    ],
+                    "original_price" => 10000,
+                    "model_sku" => "SKU-test",
+                    "seller_stock" => [
+                        [
+                            "location_id" => "IDZ",
+                            "stock" => 0
+                        ]
+                    ],
+                ]
+            ],
+        ];
+
+        $updateTierResponse = Shoapi::call('product')
+            ->access('init_tier_variation', $accessToken)
+            ->shop($shopId)
+            ->request($tier)
+            ->response();
+
+        return response()->json($updateTierResponse);
     }
 
 }

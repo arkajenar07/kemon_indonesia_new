@@ -158,7 +158,7 @@ class ProductController extends Controller
             'grouped_models' => $groupedModels,
         ];
 
-        // dd($item);
+        dd($item);
 
         return view('product.index', compact('item_id', 'item'));
 
@@ -423,10 +423,81 @@ class ProductController extends Controller
         return redirect()->route('product.info', parameters: $validated['item_id']);
     }
 
-
-    public function add_tier()
+    public function delete($item_id)
     {
+        $shopId = 766550807; // ganti dengan shop_id kamu
 
+        $accessToken = ShopeeTokenManager::getValidAccessToken($shopId);
+
+        if (!$accessToken) {
+            return response()->json(['error' => 'Token tidak ditemukan atau belum di-authorize'], 401);
+        }
+        $deleteItem = Shoapi::call('product')
+            ->access('delete_item', $accessToken)
+            ->shop($shopId)
+            ->request([
+                'item_id' => (int) $item_id
+            ])
+            ->response();
+
+        // dd($deleteItem);
+
+        return redirect()->route('dashboard');
+    }
+
+    public function add()
+    {
+        $shopId = 766550807; // ganti dengan shop_id kamu
+
+        $accessToken = ShopeeTokenManager::getValidAccessToken($shopId);
+
+        if (!$accessToken) {
+            return response()->json(['error' => 'Token tidak ditemukan atau belum di-authorize'], 401);
+        }
+
+        $responseCategory = Shoapi::call('product')
+                    ->access('get_category', $accessToken)
+                    ->shop($shopId)
+                    ->request([
+                        'language' => 'id',
+                    ])
+                    ->response();
+
+        $responseCategory = json_decode(json_encode($responseCategory), true);
+
+        $categories = $responseCategory['category_list'] ?? [];
+
+        $categories = $responseCategory['category_list'] ?? [];
+
+        $categories = array_filter($categories, function ($category) {
+            $name = strtolower($category['display_category_name']);
+            $firstWord = explode(' ', $name)[0];
+            return in_array($firstWord, ['sepatu', 'sandal']);
+        });
+
+        return view('product.add', compact('categories'));
+    }
+
+    public function store_item(Request $request){
+        $validated = $request->validate([
+            'item_name' => 'required|string',
+            'description' => 'required|string',
+            'item_sku' => 'required|string',
+            'weight' => 'required|numeric',
+            'package_length' => 'required|numeric',
+            'package_width' => 'required|numeric',
+            'package_height' => 'required|numeric',
+            'logistic_id' => 'required|numeric',
+            'shipping_fee' => 'required|numeric',
+            'is_free' => 'nullable',
+            'condition' => 'required|string',
+            'item_status' => 'required|string',
+            'image' => 'nullable|array',
+            'image.image_id_list' => 'nullable|array',
+            'image.image_url_list' => 'nullable|array',
+        ]);
+
+        dd($validated);
     }
 
 

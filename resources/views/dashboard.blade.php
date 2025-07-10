@@ -38,7 +38,7 @@
                         <input type="text" name="" id="" class="bg-transparent border-none outline-none focus:outline-none ring-0 focus:ring-0" placeholder="Cari Produk">
                     </div>
                     <div class="w-[200px] bg-[#3A2D28] rounded-xl">
-                        <a href="">
+                        <a href="{{ route('product.add') }}">
                             <div class="text-white w-full h-full flex items-center justify-center gap-x-2">
                                 <img src="{{ asset('assets/icons/add-product-white.svg') }}" alt="" class="w-6">
                                 <span>Add Product</span>
@@ -71,11 +71,12 @@
                                     <a href="{{ route('product.info', parameters: $item['item_id']) }}">Details</a>
                                 </button>
                                 <div class="w-10 h-10">
-                                    <a href="">
-                                        <div class="bg-red-200 ml-auto rounded-md h-full flex items-center justify-center p-2">
+                                    <form action="{{ route('product.delete', $item['item_id']) }}" method="POST">
+                                        @csrf
+                                        <button type="submit" class="bg-red-200 ml-auto rounded-md h-full flex items-center justify-center p-2">
                                             <img src="{{ asset('assets/icons/trash.svg') }}" alt="">
-                                        </div>
-                                    </a>
+                                        </button>
+                                    </form>
                                 </div>
                             </div>
                         </div>
