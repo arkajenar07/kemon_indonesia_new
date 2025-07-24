@@ -38,7 +38,7 @@
                         <input type="text" name="" id="" class="bg-transparent border-none outline-none focus:outline-none ring-0 focus:ring-0" placeholder="Cari Produk">
                     </div>
                     <div class="w-[200px] bg-[#3A2D28] rounded-xl">
-                        <a href="">
+                        <a href="{{ route('dashboard.pembelian.add') }}">
                             <div class="text-white w-full h-full flex items-center justify-center gap-x-2">
                                 <img src="{{ asset('assets/icons/add-product-white.svg') }}" alt="" class="w-6">
                                 <span>Add Product</span>
@@ -83,13 +83,13 @@
                                     Lunas
                                 </div>
                             </div>
-                            <div class="mt-4">
-                                <a href="">
+                            <div class="mt-4 flex flex-col gap-y-2">
+                                <a href="{{ route('dashboard.pembelian.show', ['pembelian_id' => $pembelian->id]) }}">
                                     <div class="bg-slate-200 text-sm text-gray-800 font-semibold px-4 py-2 rounded-lg text-center">
                                         Detail
                                     </div>
                                 </a>
-                                <a href="{{ route('pembelian.edit', ['pembelian_id' => $pembelian->id]) }}">
+                                <a href="{{ route('dashboard.pembelian.edit', ['pembelian_id' => $pembelian->id]) }}">
                                     <div class="bg-yellow-200 text-sm text-yellow-800 font-semibold px-4 py-2 rounded-lg text-center">
                                         Edit
                                     </div>

@@ -29,6 +29,7 @@ Route::get('/', function () {
 // ==============================
 Route::prefix('dashboard/pembelian')->name('dashboard.')->group(function () {
     Route::get('/', [PembelianController::class, 'index'])->name('pembelian');
+    Route::get('/{pembelian_id}/show', [PembelianController::class, 'show'])->name('pembelian.show');
     Route::get('/add', [PembelianController::class, 'create'])->name('pembelian.add');
     Route::post('/store', [PembelianController::class, 'store'])->name('pembelian.store');
     Route::get('/{pembelian_id}/edit', [PembelianController::class, 'edit'])->name('pembelian.edit');

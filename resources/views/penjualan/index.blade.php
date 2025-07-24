@@ -49,10 +49,17 @@
             </div>
         </section>
         <section class="mt-10">
-            @if (count($orders) > 0)
-                <h2>Ada Order</h2>
+            @if (count($allOrders) > 0)
+            <div>
+                @foreach ($allOrders as $order)
+                <div>
+                    <h2>Tanggal {{date("Y-m-d H:i:s", $order['update_time'])}}</h2>
+                    <h2>Waktu kirim: {{$order['days_to_ship']}} hari</h2>
+                </div>
+                @endforeach
+            </div>
             @else
-                <h2>Tak ada order la we</h2>
+                <h2>Belum ada order disini</h2>
             @endif
         </section>
     </main>

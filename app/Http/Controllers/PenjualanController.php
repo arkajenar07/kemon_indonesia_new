@@ -41,9 +41,29 @@ class PenjualanController extends Controller
         $orderResponseArray = json_decode(json_encode($orderResponse), true);
         $orders = $orderResponseArray['order_list'];
 
-        // dd($orderResponse);
+        $allOrders = [];
 
-        return view('penjualan.index', compact('orders'));
+        foreach ($orders as $order) {
+            $orderSn = $order['order_sn'];
+            $paramsOrderdetail = [
+                'order_sn_list' => $orderSn,
+            ];
+
+            $orderDetailResponse = Shoapi::call('order')
+                ->access('get_order_detail', $accessToken)
+                ->shop($shopId)
+                ->request($paramsOrderdetail)
+                ->response();
+
+            $orderResponseArray = json_decode(json_encode($orderDetailResponse), true);
+
+            $allOrders[] = $orderResponseArray['order_list'][0];
+
+        }
+
+        // dd($allOrders);
+
+        return view('penjualan.index', compact('allOrders'));
     }
 
     /**

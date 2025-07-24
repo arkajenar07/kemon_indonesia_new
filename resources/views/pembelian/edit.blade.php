@@ -28,7 +28,7 @@
     </header>
     <main class="px-10 mt-[180px]">
         <div class="w-3/5 bg-[#FFF] mt-16 shadow-xl mx-auto rounded-b-[30px]">
-            <form action="{{ route('pembelian.update', ['pembelian_id' => $pembelian->id]) }}" method="post">
+            <form action="{{ route('dashboard.pembelian.update', ['pembelian_id' => $pembelian->id]) }}" method="post">
                 @csrf
                 @method('PUT')
                 <div class="flex bg-[#B17457] p-[18px] rounded-t-[30px] items-center gap-x-[12px]">

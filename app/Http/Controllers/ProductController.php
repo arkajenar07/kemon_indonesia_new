@@ -158,7 +158,7 @@ class ProductController extends Controller
             'grouped_models' => $groupedModels,
         ];
 
-        dd($item);
+        // dd($item);
 
         return view('product.index', compact('item_id', 'item'));
 
@@ -479,23 +479,145 @@ class ProductController extends Controller
     }
 
     public function store_item(Request $request){
+        $shopId = 766550807; // ganti dengan shop_id kamu
+
+        $accessToken = ShopeeTokenManager::getValidAccessToken($shopId);
+
+        if (!$accessToken) {
+            return response()->json(['error' => 'Token tidak ditemukan atau belum di-authorize'], 401);
+        }
+
         $validated = $request->validate([
             'item_name' => 'required|string',
             'description' => 'required|string',
             'item_sku' => 'required|string',
+            'category_id' => 'required|numeric',
             'weight' => 'required|numeric',
             'package_length' => 'required|numeric',
             'package_width' => 'required|numeric',
             'package_height' => 'required|numeric',
             'logistic_id' => 'required|numeric',
-            'shipping_fee' => 'required|numeric',
-            'is_free' => 'nullable',
             'condition' => 'required|string',
             'item_status' => 'required|string',
             'image' => 'nullable|array',
             'image.image_id_list' => 'nullable|array',
             'image.image_url_list' => 'nullable|array',
         ]);
+
+        // Simulasi input
+        $data = [
+            "category_id" => $validated['category_id'],
+            "item_name" => $validated['item_name'],
+            "description" => $validated['description'],
+            "item_sku" => $validated['item_sku'],
+            "image" => [
+                $validated['image'][0],
+                "image_ratio" => "1:1",
+            ],
+            "original_price" => 7000,
+            "weight" => $validated['weight'],
+            "dimension" => [
+                "package_length" => $validated['package_length'],
+                "package_width" => $validated['package_length'],
+                "package_height" => $validated['package_length'],
+            ],
+            "logistic_info" => [
+                [
+                    "logistic_id" => 8003,
+                    "enabled" => true,
+                ],
+                [
+                    "logistic_id" => 8002,
+                    "enabled" => true,
+                ]
+            ],
+            "pre_order" => [
+                "is_pre_order" => false,
+                "days_to_ship" => 2,
+            ],
+            "condition" => "NEW",
+            "size_chart" => "",
+            "item_status" => "NORMAL",
+            "brand" => [
+                "brand_id" => 0,
+            ],
+            "item_dangerous" => 0,
+            "description_type" => "normal",
+            "size_chart_id" => 0,
+            "promotion_image" => [
+                "image_id_list" => [
+                    "id-11134207-7rbkb-maph9k5wsdus18",
+                ],
+                "image_url_list" => [
+                    "https://cf.shopee.co.id/file/id-11134207-7rbkb-maph9k5wsdus18",
+                ],
+            ],
+            "seller_stock" => [
+                [
+                    "location_id" => "IDZ",
+                    "stock" => 10
+                ]
+            ]
+        ];
+
+        dd($data);
+
+        $addResponse = Shoapi::call('product')
+                    ->access('add_item', $accessToken)
+                    ->shop($shopId)
+                    ->request(
+                        $data
+                    )
+                    ->response();
+
+        $addResponseArray = json_decode(json_encode($addResponse), true);
+
+
+        $tier = [
+            "item_id" => $addResponseArray['item_id'],
+            "tier_variation" => [
+                [
+                    "name" => "Warna",
+                    "option_list" => [
+                        [
+                            "option" => "Default",
+                            "image" => [
+                                "image_id" => "id-11134207-7rbkb-maph9k5wsdus18"
+                            ]
+                        ]
+                    ]
+                ],
+                [
+                    "name" => "Ukuran",
+                    "option_list" => [
+                        [
+                            "option" => "32",
+                        ]
+                    ]
+                ]
+            ],
+            "model" => [
+                [
+                    "tier_index" => [
+                        0, 0
+                    ],
+                    "original_price" => 10000,
+                    "model_sku" => "SKU-test",
+                    "seller_stock" => [
+                        [
+                            "location_id" => "IDZ",
+                            "stock" => 0
+                        ]
+                    ],
+                ]
+            ],
+        ];
+
+        $updateTierResponse = Shoapi::call('product')
+            ->access('init_tier_variation', $accessToken)
+            ->shop($shopId)
+            ->request($tier)
+            ->response();
 
         dd($validated);
     }

@@ -42,8 +42,9 @@ class PembelianController extends Controller
     }
 
     // Menampilkan detail satu pembelian
-    public function show(Pembelian $pembelian)
+    public function show($pembelian_id)
     {
+        $pembelian = Pembelian::find($pembelian_id);
         return view('pembelian.show', compact('pembelian'));
     }
 
